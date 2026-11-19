@@ -17,6 +17,14 @@ Keep a private note open (for example in your phone's Notes app, *not* shared) t
 | `GEMINI_API_KEY` | Google AI Studio, step 4 (keep secret!) |
 | `CRON_SECRET` | You make it up, step 5.4 |
 
+**Direct links** (open them on your phone):
+Supabase sign-in https://supabase.com/dashboard/sign-in ·
+SQL file https://github.com/Hotbomb/Bcel-accounting/blob/ccr-26fb9533-tieoku/supabase/migrations/0001_init.sql ·
+Google Cloud https://console.cloud.google.com/projectcreate ·
+Claude billing https://platform.claude.com/settings/billing ·
+Gemini key https://aistudio.google.com/apikey ·
+Vercel import https://vercel.com/new
+
 Websites change their button names now and then. If a button in this guide is missing, look for one with a similar name, or ask Claude in the chat and describe what you see.
 
 ---
