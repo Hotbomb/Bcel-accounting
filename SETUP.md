@@ -102,7 +102,7 @@ Websites change their button names now and then. If a button in this guide is mi
 2. Open **Workers & Pages** (https://dash.cloudflare.com/?to=/:account/workers-and-pages) and tap **Create**.
 3. Choose **Import a repository** (or **Continue with GitHub**), connect GitHub, allow access to **Bcel-accounting**, and select it.
 4. Fill in:
-   - **Project name:** `kip-tracker` (must be exactly this)
+   - **Project name:** `bcel-accounting` (must be exactly this)
    - **Build command:** `npx opennextjs-cloudflare build`
    - **Deploy command:** `npx wrangler deploy`
 5. Tap **Create and deploy** (or **Save and Deploy**) and wait about 3-5 minutes for the build to finish.
@@ -114,13 +114,13 @@ Websites change their button names now and then. If a button in this guide is mi
    - `GEMINI_API_KEY`
 
    Then tap **Deploy**.
-7. Your address is shown under **Settings**, then **Domains & Routes**. It looks like `https://kip-tracker.YOUR-NAME.workers.dev`. Open it and add `/setup-check` at the end to confirm every line shows a green tick.
+7. Your address is shown under **Settings**, then **Domains & Routes**. It looks like `https://bcel-accounting.YOUR-NAME.workers.dev`. Open it and add `/setup-check` at the end to confirm every line shows a green tick.
 
 ## 6. Connect the address back to Supabase
 
 1. In Supabase, go to **Authentication**, then **URL Configuration**.
-2. **Site URL:** paste your Cloudflare address, e.g. `https://kip-tracker.YOUR-NAME.workers.dev`. Click **Save**.
-3. Under **Redirect URLs**, click **Add URL**, paste your address followed by `/auth/callback` (e.g. `https://kip-tracker.YOUR-NAME.workers.dev/auth/callback`), and click **Save**.
+2. **Site URL:** paste your Cloudflare address, e.g. `https://bcel-accounting.YOUR-NAME.workers.dev`. Click **Save**.
+3. Under **Redirect URLs**, click **Add URL**, paste your address followed by `/auth/callback` (e.g. `https://bcel-accounting.YOUR-NAME.workers.dev/auth/callback`), and click **Save**.
 
 ## 7. First sign-in
 
