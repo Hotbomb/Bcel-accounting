@@ -2,10 +2,28 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, supabaseConfigured } from "@/lib/env";
 
-const PUBLIC_PATHS = ["/login", "/auth", "/pending", "/api/cron", "/manifest.webmanifest", "/icon", "/apple-icon"];
+const PUBLIC_PATHS = ["/login", "/auth", "/pending", "/api/cron", "/setup-check", "/manifest.webmanifest", "/icon", "/apple-icon"];
 
 export async function middleware(request: NextRequest) {
-  if (!supabaseConfigured()) return NextResponse.next();
+  const path = request.nextUrl.pathname;
+  if (path === "/setup-check") return NextResponse.next();
+  if (!supabaseConfigured()) return redirectToSetupCheck(request);
+  try {
+    return await handle(request);
+  } catch {
+    // Usually a mistyped Supabase setting. Show the setup check instead of crashing.
+    return redirectToSetupCheck(request);
+  }
+}
+
+function redirectToSetupCheck(request: NextRequest) {
+  const url = request.nextUrl.clone();
+  url.pathname = "/setup-check";
+  url.search = "";
+  return NextResponse.redirect(url);
+}
+
+async function handle(request: NextRequest) {
 
   let response = NextResponse.next({ request });
   const supabase = createServerClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
