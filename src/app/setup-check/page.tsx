@@ -13,32 +13,35 @@ interface Check {
 /** Checks a setting's format without ever showing its value. */
 function checkFormat(name: string, value: string | undefined, test: (v: string) => boolean, hint: string): Check {
   if (!value) return { name, status: "bad", detail: "Missing. Add it in Cloudflare: your Worker → Settings → Variables and Secrets." };
-  if (value !== value.trim()) return { name, status: "bad", detail: "Has a space or line break at the start or end. Remove it." };
-  if (!test(value)) return { name, status: "bad", detail: hint };
+  // Stray spaces or line breaks from copy-paste are removed by the app, so they are fine.
+  if (!test(value.trim())) return { name, status: "bad", detail: hint };
   return { name, status: "ok", detail: "Looks right." };
 }
 
 async function runChecks(): Promise<Check[]> {
-  const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const pub =
+  const rawUrl = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const rawPub =
     process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  const secret = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const rawSecret = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   const checks: Check[] = [
-    checkFormat("SUPABASE_URL", url, (v) => /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(v), "Should look exactly like https://abcd1234.supabase.co (nothing after .co)."),
-    checkFormat("SUPABASE_PUBLISHABLE_KEY", pub, (v) => v.startsWith("sb_publishable_") || v.startsWith("eyJ"), "Should start with sb_publishable_ (or eyJ for the old 'anon' key)."),
-    checkFormat("SUPABASE_SECRET_KEY", secret, (v) => (v.startsWith("sb_secret_") || v.startsWith("eyJ")) && v !== pub, "Should start with sb_secret_ (or eyJ for the old 'service_role' key), and be different from the publishable key."),
+    checkFormat("SUPABASE_URL", rawUrl, (v) => /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(v), "Should look exactly like https://abcd1234.supabase.co (nothing after .co)."),
+    checkFormat("SUPABASE_PUBLISHABLE_KEY", rawPub, (v) => v.startsWith("sb_publishable_") || v.startsWith("eyJ"), "Should start with sb_publishable_ (or eyJ for the old 'anon' key)."),
+    checkFormat("SUPABASE_SECRET_KEY", rawSecret, (v) => (v.startsWith("sb_secret_") || v.startsWith("eyJ")) && v !== rawPub?.trim(), "Should start with sb_secret_ (or eyJ for the old 'service_role' key), and be different from the publishable key."),
     checkFormat("ANTHROPIC_API_KEY", process.env.ANTHROPIC_API_KEY, (v) => v.startsWith("sk-ant-"), "Should start with sk-ant-."),
     checkFormat("GEMINI_API_KEY", process.env.GEMINI_API_KEY, (v) => v.length >= 30 && !/\s/.test(v), "Looks too short or contains spaces."),
   ];
 
+  const url = rawUrl?.trim().replace(/\/$/, "");
+  const pub = rawPub?.trim();
+  const secret = rawSecret?.trim();
   const urlOk = checks[0].status === "ok";
   const pubOk = checks[1].status === "ok";
   const secretOk = checks[2].status === "ok";
 
   if (urlOk && pubOk) {
     try {
-      const res = await fetch(`${url!.replace(/\/$/, "")}/auth/v1/settings`, { headers: { apikey: pub! }, cache: "no-store" });
+      const res = await fetch(`${url}/auth/v1/settings`, { headers: { apikey: pub! }, cache: "no-store" });
       if (res.status === 401 || res.status === 403) {
         checks.push({ name: "Supabase connection", status: "bad", detail: "Supabase rejected the publishable key. Copy it again." });
       } else if (!res.ok) {

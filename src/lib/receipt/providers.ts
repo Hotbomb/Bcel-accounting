@@ -32,8 +32,9 @@ let anthropic: Anthropic | null = null;
 let gemini: GoogleGenAI | null = null;
 
 export async function extractWithClaude(imageBase64: string, mediaType: ImageMediaType): Promise<ProviderResult> {
-  if (!process.env.ANTHROPIC_API_KEY) throw new ProviderError("not_configured", "ANTHROPIC_API_KEY is not set");
-  anthropic ??= new Anthropic({ maxRetries: 1, timeout: 45_000 });
+  const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
+  if (!apiKey) throw new ProviderError("not_configured", "ANTHROPIC_API_KEY is not set");
+  anthropic ??= new Anthropic({ apiKey, maxRetries: 1, timeout: 45_000 });
 
   let response;
   try {
@@ -86,8 +87,9 @@ function classifyAnthropicError(err: unknown): ProviderError {
 }
 
 export async function extractWithGemini(imageBase64: string, mediaType: ImageMediaType): Promise<ProviderResult> {
-  if (!process.env.GEMINI_API_KEY) throw new ProviderError("not_configured", "GEMINI_API_KEY is not set");
-  gemini ??= new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
+  if (!apiKey) throw new ProviderError("not_configured", "GEMINI_API_KEY is not set");
+  gemini ??= new GoogleGenAI({ apiKey });
 
   let response;
   try {
