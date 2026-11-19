@@ -1,24 +1,7 @@
-"use client";
-import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { signInWithGoogle } from "./actions";
 
-export default function LoginPage() {
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function signIn() {
-    setBusy(true);
-    setError(null);
-    const { error } = await createClient().auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
-    });
-    if (error) {
-      setError("Could not start Google sign-in. Please try again.");
-      setBusy(false);
-    }
-  }
-
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+  const { error } = await searchParams;
   return (
     <main className="mx-auto flex min-h-dvh max-w-sm flex-col px-6 pb-10 pt-[max(4rem,env(safe-area-inset-top))]">
       <div className="hero-glow" aria-hidden />
@@ -39,10 +22,14 @@ export default function LoginPage() {
           </span>
           <p className="text-sm text-ink/75">Private and invite only. Receipt photos are deleted right after they&apos;re read.</p>
         </div>
-        <button onClick={signIn} disabled={busy} className="btn-primary w-full py-4 text-base">
-          {busy ? "Opening Google…" : "Sign in with Google"}
-        </button>
-        {error && <p className="text-center text-sm text-brand" role="alert">{error}</p>}
+        <form action={signInWithGoogle}>
+          <button className="btn-primary w-full py-4 text-base">Sign in with Google</button>
+        </form>
+        {error && (
+          <p className="text-center text-sm text-brand" role="alert">
+            Sign-in didn&apos;t finish. Please try again.
+          </p>
+        )}
       </div>
       <p className="mt-6 text-center text-xs text-ink/55">New accounts need approval from the admin.</p>
     </main>

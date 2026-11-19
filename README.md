@@ -42,7 +42,7 @@ npm test                      # unit tests
 npm run typecheck && npm run lint && npm run build
 ```
 
-- Next.js 15 (App Router) + Tailwind 4, deployed on Vercel (region `sin1`).
+- Next.js 15 (App Router) + Tailwind 4, deployed on Cloudflare Workers via OpenNext (`npm run cf:deploy`).
 - Supabase: Google auth, Postgres with row-level security (`supabase/migrations`), private storage bucket `review-images`.
 - AI: `@anthropic-ai/sdk` (structured outputs via `messages.parse` + Zod), `@google/genai` fallback. Keys exist only as server environment variables.
 - Key code: `src/lib/receipt/` (prompt, schema, providers, fallback, normalisation, pre-filter) and `src/app/api/receipts/route.ts`.

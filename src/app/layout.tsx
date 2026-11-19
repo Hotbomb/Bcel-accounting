@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Kip Tracker",
   description: "Track your spending from BCEL One receipts",
+  icons: { icon: "/icon-512.png", apple: "/apple-touch-icon.png" },
   appleWebApp: { capable: true, title: "Kip Tracker", statusBarStyle: "black-translucent" },
 };
 

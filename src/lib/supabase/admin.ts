@@ -1,6 +1,6 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
-import { SUPABASE_URL } from "../env";
+import { supabaseSecretKey, supabaseUrl } from "../env";
 
 /**
  * Bypasses row-level security. Only used for app-wide bookkeeping (AI usage
@@ -8,7 +8,7 @@ import { SUPABASE_URL } from "../env";
  * transactions.
  */
 export function createAdminClient() {
-  const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = supabaseSecretKey();
   if (!key) throw new Error("SUPABASE_SECRET_KEY is not set");
-  return createClient(SUPABASE_URL, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  return createClient(supabaseUrl(), key, { auth: { persistSession: false, autoRefreshToken: false } });
 }

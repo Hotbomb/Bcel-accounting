@@ -1,8 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL, supabaseConfigured } from "@/lib/env";
+import { supabaseConfigured, supabasePublishableKey, supabaseUrl } from "@/lib/env";
 
-const PUBLIC_PATHS = ["/login", "/auth", "/pending", "/api/cron", "/setup-check", "/manifest.webmanifest", "/icon", "/apple-icon"];
+const PUBLIC_PATHS = ["/login", "/auth", "/pending", "/setup-check", "/manifest.webmanifest"];
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -26,7 +26,7 @@ function redirectToSetupCheck(request: NextRequest) {
 async function handle(request: NextRequest) {
 
   let response = NextResponse.next({ request });
-  const supabase = createServerClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  const supabase = createServerClient(supabaseUrl(), supabasePublishableKey(), {
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll: (list) => {
@@ -54,5 +54,5 @@ async function handle(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.png$).*)"],
 };

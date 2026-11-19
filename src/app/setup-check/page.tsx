@@ -12,24 +12,24 @@ interface Check {
 
 /** Checks a setting's format without ever showing its value. */
 function checkFormat(name: string, value: string | undefined, test: (v: string) => boolean, hint: string): Check {
-  if (!value) return { name, status: "bad", detail: "Missing. Add it in Vercel → Settings → Environment Variables." };
+  if (!value) return { name, status: "bad", detail: "Missing. Add it in Cloudflare: your Worker → Settings → Variables and Secrets." };
   if (value !== value.trim()) return { name, status: "bad", detail: "Has a space or line break at the start or end. Remove it." };
   if (!test(value)) return { name, status: "bad", detail: hint };
   return { name, status: "ok", detail: "Looks right." };
 }
 
 async function runChecks(): Promise<Check[]> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const pub = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const pub =
+    process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const secret = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   const checks: Check[] = [
-    checkFormat("NEXT_PUBLIC_SUPABASE_URL", url, (v) => /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(v), "Should look exactly like https://abcd1234.supabase.co (nothing after .co)."),
-    checkFormat("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", pub, (v) => v.startsWith("sb_publishable_") || v.startsWith("eyJ"), "Should start with sb_publishable_ (or eyJ for the old 'anon' key)."),
+    checkFormat("SUPABASE_URL", url, (v) => /^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(v), "Should look exactly like https://abcd1234.supabase.co (nothing after .co)."),
+    checkFormat("SUPABASE_PUBLISHABLE_KEY", pub, (v) => v.startsWith("sb_publishable_") || v.startsWith("eyJ"), "Should start with sb_publishable_ (or eyJ for the old 'anon' key)."),
     checkFormat("SUPABASE_SECRET_KEY", secret, (v) => (v.startsWith("sb_secret_") || v.startsWith("eyJ")) && v !== pub, "Should start with sb_secret_ (or eyJ for the old 'service_role' key), and be different from the publishable key."),
     checkFormat("ANTHROPIC_API_KEY", process.env.ANTHROPIC_API_KEY, (v) => v.startsWith("sk-ant-"), "Should start with sk-ant-."),
     checkFormat("GEMINI_API_KEY", process.env.GEMINI_API_KEY, (v) => v.length >= 30 && !/\s/.test(v), "Looks too short or contains spaces."),
-    checkFormat("CRON_SECRET", process.env.CRON_SECRET, (v) => v.length >= 16, "Should be at least 16 random characters."),
   ];
 
   const urlOk = checks[0].status === "ok";
@@ -97,7 +97,7 @@ export default async function SetupCheckPage() {
       <div className="card space-y-4 p-6">
         <h1 className="text-xl font-bold">Setup check</h1>
         <p className="text-sm text-ink/70">
-          {allOk ? "Everything needed is in place. " : "Fix the items marked ❌, then redeploy (see below). "}
+          {allOk ? "Everything needed is in place. " : "Fix the items marked ❌ (see below). "}
           Values are never shown here.
         </p>
         <ul className="space-y-3">
@@ -111,8 +111,7 @@ export default async function SetupCheckPage() {
           ))}
         </ul>
         <div className="rounded-2xl bg-white/60 p-3 text-sm text-ink/70">
-          <b>After changing a setting in Vercel:</b> open your project → <b>Deployments</b> → tap <b>⋯</b> on the top one → <b>Redeploy</b> →{" "}
-          <b>Redeploy</b>. Changes only take effect after a redeploy.
+          <b>After changing a setting in Cloudflare:</b> tap <b>Deploy</b> on the settings page, wait a few seconds, then reload this page.
         </div>
         {allOk && (
           <a href="/login" className="btn-primary w-full">
