@@ -22,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="blob blob-a" />
           <div className="blob blob-b" />
           <div className="blob blob-c" />
+          <div className="blob blob-d" />
         </div>
         {children}
       </body>
