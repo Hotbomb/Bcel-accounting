@@ -142,15 +142,15 @@ export function UploadClient() {
         <button className="btn-primary w-full py-5 text-base" disabled={running} onClick={() => inputRef.current?.click()}>
           {running ? `Reading ${done} of ${total}…` : "Choose photos"}
         </button>
-        <label className="flex items-start gap-3 text-sm text-stone-600">
+        <label className="flex items-start gap-3 text-sm text-ink/70">
           <input type="checkbox" className="mt-0.5 h-5 w-5 accent-brand" checked={useFilter} onChange={(e) => setUseFilter(e.target.checked)} disabled={running} />
           <span>
             Skip photos that clearly aren&apos;t BCEL receipts on this device first (recommended; saves AI costs). Turn off if a receipt was missed.
           </span>
         </label>
         {running && (
-          <div className="h-2 overflow-hidden rounded-full bg-stone-100" aria-hidden>
-            <div className="h-full bg-brand transition-all" style={{ width: `${pct}%` }} />
+          <div className="h-2 overflow-hidden rounded-full bg-white/70" aria-hidden>
+            <div className="h-full rounded-full bg-gradient-to-r from-brand to-gold transition-all" style={{ width: `${pct}%` }} />
           </div>
         )}
       </div>
@@ -171,11 +171,11 @@ export function UploadClient() {
             </p>
           )}
           {counts.error > 0 && <p className="text-sm text-red-700">{counts.error} could not be read. Try those again later.</p>}
-          {notice && <p className="text-sm text-stone-600">{notice}</p>}
+          {notice && <p className="text-sm text-ink/70">{notice}</p>}
         </div>
       )}
 
-      <p className="text-xs text-stone-500">
+      <p className="px-1 text-xs text-ink/60">
         Photos are only used to read the receipt and are deleted right away. Receipts that need checking are kept for up to 7 days so you can compare.
       </p>
     </div>

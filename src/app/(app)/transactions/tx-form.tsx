@@ -43,8 +43,8 @@ export function TxForm({
           ).map(([value, label]) => (
             <label
               key={value}
-              className={`cursor-pointer rounded-xl px-2 py-3 text-center text-sm font-medium ring-1 ${
-                kind === value ? "bg-brand text-white ring-brand" : "bg-white ring-stone-300"
+              className={`cursor-pointer rounded-2xl px-2 py-3 text-center text-sm font-medium ring-1 ${
+                kind === value ? "glass-red ring-0" : "bg-white/70 ring-white/80 hover:bg-white/90"
               }`}
             >
               <input

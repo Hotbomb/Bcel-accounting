@@ -9,8 +9,8 @@ export default async function NewTransactionPage({ searchParams }: { searchParam
   return (
     <main className="space-y-4">
       <div>
-        <h1 className="text-xl font-bold">Manual entry</h1>
-        <p className="mt-1 text-sm text-stone-600">For income, cash spending, or anything without a BCEL receipt.</p>
+        <h1 className="text-2xl font-bold text-white">Manual entry</h1>
+        <p className="mt-1 text-sm text-white/90">For income, cash spending, or anything without a BCEL receipt.</p>
       </div>
       <TxForm
         action={createManualTransaction}

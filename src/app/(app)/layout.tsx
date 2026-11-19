@@ -6,17 +6,17 @@ import { Nav } from "./nav";
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { profile } = await requireUser();
   return (
-    <div className="mx-auto max-w-2xl px-4 pb-28 pt-4 md:pb-10">
+    <div className="mx-auto max-w-2xl px-4 pb-32 pt-[max(1rem,env(safe-area-inset-top))] md:pb-10">
       <header className="mb-4 flex items-center justify-between gap-2">
-        <Link href="/" className="flex items-center gap-2 font-bold">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white">₭</span>
+        <Link href="/" className="flex items-center gap-2 font-bold text-white">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/50 bg-white/20 text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.6)] backdrop-blur-md">₭</span>
           Kip Tracker
         </Link>
         <div className="hidden md:block">
           <Nav />
         </div>
         <form action={signOut}>
-          <button className="text-sm text-stone-500 hover:text-stone-800" title={profile.email}>
+          <button className="rounded-full border border-white/40 bg-white/15 px-3 py-1 text-sm text-white backdrop-blur-md hover:bg-white/25" title={profile.email}>
             Sign out
           </button>
         </form>

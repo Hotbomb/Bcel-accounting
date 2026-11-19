@@ -44,8 +44,8 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
   return (
     <main className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">{sp.view === "review" ? "Needs review" : "Transactions"}</h1>
-        <Link href={sp.view === "review" ? "/transactions" : "/transactions?view=review"} className="text-sm text-brand underline">
+        <h1 className="text-2xl font-bold text-white">{sp.view === "review" ? "Needs review" : "Transactions"}</h1>
+        <Link href={sp.view === "review" ? "/transactions" : "/transactions?view=review"} className="rounded-full border border-white/40 bg-white/20 px-3 py-1 text-sm font-medium text-white backdrop-blur-md">
           {sp.view === "review" ? "Show all" : "Needs review"}
         </Link>
       </div>
@@ -89,11 +89,11 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
         const spent = items.filter((t) => t.kind === "expense").reduce((s, t) => s + Number(t.amount_lak ?? 0), 0);
         return (
           <section key={day}>
-            <div className="mb-1 flex justify-between px-1 text-xs font-medium uppercase tracking-wide text-stone-500">
+            <div className="mb-1 flex justify-between px-2 text-xs font-semibold uppercase tracking-wide text-ink/55">
               <span>{label}</span>
               {spent > 0 && <span>{formatKip(spent)}</span>}
             </div>
-            <ul className="card divide-y divide-stone-100 p-0">
+            <ul className="card divide-y divide-white/70 overflow-hidden p-0">
               {items.map((t) => {
                 const cat = categoryBySlug(t.category);
                 const p2 = vientianeParts(new Date(t.occurred_at));
@@ -124,7 +124,7 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
                       {t.currency !== "LAK" && t.amount_lak !== null && <div className="text-xs text-stone-500">{formatKip(Number(t.amount_lak))}</div>}
                       {t.status === "needs_review" && (
                         <form action={confirmTransaction.bind(null, t.id)}>
-                          <button className="mt-1 rounded-lg bg-brand px-2 py-1 text-xs font-semibold text-white">Confirm</button>
+                          <button className="glass-red mt-1 rounded-full px-3 py-1 text-xs font-semibold">Confirm</button>
                         </form>
                       )}
                     </div>

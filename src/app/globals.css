@@ -1,41 +1,147 @@
 @import "tailwindcss";
 
+/*
+ * Theme: BCEL-inspired red, white and gold, with calm "liquid" frosted glass.
+ * Colour lives in the background layer; cards and controls are frosted glass
+ * on top, and text always sits on a surface opaque enough to stay readable.
+ */
 @theme {
-  --color-brand: #0f766e;
-  --color-brand-dark: #115e59;
-  --color-brand-soft: #ccfbf1;
-  --color-bcel: #b8121c;
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Lao", "Phetsarath OT", sans-serif;
+  --color-brand: #b8121c;        /* BCEL red */
+  --color-brand-dark: #8e0d15;
+  --color-brand-soft: #fde7e8;
+  --color-gold: #f2b705;         /* champa flower gold, accents only */
+  --color-ink: #2a1a1b;          /* warm near-black for text */
+  --color-tick: #16a34a;         /* receipt green tick */
+  --font-sans: system-ui, -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Noto Sans Lao", "Phetsarath OT", sans-serif;
+}
+
+:root {
+  --glass-bg: rgb(255 255 255 / 0.58);
+  --glass-bg-strong: rgb(255 255 255 / 0.78);
+  --glass-border: rgb(255 255 255 / 0.7);
+  --glass-shadow: 0 10px 30px -12px rgb(120 10 20 / 0.22), 0 2px 6px -2px rgb(120 10 20 / 0.08);
+  --glass-highlight: inset 0 1px 0 rgb(255 255 255 / 0.9), inset 0 -1px 0 rgb(255 255 255 / 0.25);
 }
 
 html {
   -webkit-tap-highlight-color: transparent;
+  min-height: 100%;
+  background: linear-gradient(180deg, #f7e4e4 0%, #fbf3f1 40%, #faf7f5 100%) #faf7f5;
+  background-attachment: fixed;
 }
 
 body {
-  background: #f5f6f4;
-  color: #1c1917;
+  color: var(--color-ink);
   font-family: var(--font-sans);
+  /* The base gradient is on <html>; red glow and liquid blobs come from
+     <LiquidBackground /> (.liquid-bg) layered above it. */
+}
+
+/* ---------- Liquid background ---------- */
+.liquid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.liquid-bg::before {
+  /* the BCEL red band at the top, melting into the page like a receipt header */
+  content: "";
+  position: absolute;
+  inset: -10% -10% auto -10%;
+  height: 300px;
+  background: radial-gradient(120% 100% at 50% 0%, #c4161f 0%, #b8121c 35%, rgb(184 18 28 / 0.55) 60%, rgb(184 18 28 / 0) 100%);
+  filter: blur(8px);
+}
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  opacity: 0.55;
+  animation: drift 28s ease-in-out infinite alternate;
+}
+.blob-a { width: 320px; height: 320px; left: -80px; top: 220px; background: #f7a8ad; }
+.blob-b { width: 280px; height: 280px; right: -60px; top: 420px; background: #ffd77a; opacity: 0.4; animation-duration: 34s; }
+.blob-c { width: 360px; height: 360px; left: 30%; bottom: -140px; background: #f4c4c7; animation-duration: 40s; }
+
+@keyframes drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(30px, -20px, 0) scale(1.08); }
+  100% { transform: translate3d(-20px, 25px, 0) scale(0.96); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blob { animation: none; }
+}
+
+/* ---------- Glass surfaces ---------- */
+@utility glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-highlight);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+}
+@utility glass-strong {
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-highlight);
+  -webkit-backdrop-filter: blur(26px) saturate(170%);
+  backdrop-filter: blur(26px) saturate(170%);
+}
+/* Red glass, like the receipt header seen through frosted glass. */
+@utility glass-red {
+  color: white;
+  background: linear-gradient(145deg, rgb(206 30 40 / 0.92), rgb(150 12 22 / 0.88));
+  border: 1px solid rgb(255 255 255 / 0.35);
+  box-shadow: 0 14px 30px -12px rgb(184 18 28 / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.45);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+}
+
+/* Without blur support, fall back to near-solid surfaces so text stays readable. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --glass-bg: rgb(255 255 255 / 0.94);
+    --glass-bg-strong: rgb(255 255 255 / 0.97);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-bg: rgb(255 255 255 / 0.96);
+    --glass-bg-strong: rgb(255 255 255 / 0.98);
+  }
 }
 
 @utility card {
-  @apply rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5;
+  @apply glass rounded-3xl p-4;
 }
 @utility btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition active:scale-[0.98] disabled:opacity-50;
+  @apply inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold transition duration-200 active:scale-[0.98] disabled:opacity-50;
 }
 @utility btn-primary {
-  @apply btn bg-brand text-white hover:bg-brand-dark;
+  @apply btn glass-red hover:brightness-110;
 }
 @utility btn-secondary {
-  @apply btn bg-white text-stone-800 ring-1 ring-stone-300 hover:bg-stone-50;
+  @apply btn glass-strong text-ink hover:bg-white/90;
 }
 @utility btn-danger {
-  @apply btn bg-white text-red-700 ring-1 ring-red-200 hover:bg-red-50;
+  @apply btn glass-strong text-brand hover:bg-white/90;
 }
 @utility input {
-  @apply w-full rounded-xl border border-stone-300 bg-white px-3 py-3 text-base outline-none focus:border-brand focus:ring-2 focus:ring-brand/20;
+  @apply w-full rounded-2xl border border-white/80 bg-white/70 px-3 py-3 text-base shadow-[inset_0_1px_2px_rgb(120_10_20/0.06)] outline-none backdrop-blur-md transition placeholder:text-stone-400 focus:border-brand/50 focus:bg-white/90 focus:ring-4 focus:ring-brand/10;
 }
 @utility label {
-  @apply mb-1 block text-sm font-medium text-stone-700;
+  @apply mb-1 block text-sm font-medium text-ink/80;
+}
+
+/* Taller red glow for the sign-in screen, so the white title stays readable. */
+.hero-glow {
+  position: fixed;
+  inset: -10% -20% auto -20%;
+  height: 520px;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(90% 85% at 50% 10%, #c4161f 0%, #b8121c 45%, rgb(184 18 28 / 0.6) 70%, rgb(184 18 28 / 0) 100%);
+  filter: blur(10px);
 }

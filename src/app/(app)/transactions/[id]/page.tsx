@@ -22,11 +22,11 @@ export default async function EditTransactionPage({ params }: { params: Promise<
 
   return (
     <main className="space-y-4">
-      <Link href="/transactions" className="text-sm text-stone-500">← Transactions</Link>
-      <h1 className="text-xl font-bold">{t.status === "needs_review" ? "Check this receipt" : "Edit transaction"}</h1>
+      <Link href="/transactions" className="text-sm text-white/90">← Transactions</Link>
+      <h1 className="text-2xl font-bold text-white">{t.status === "needs_review" ? "Check this receipt" : "Edit transaction"}</h1>
 
       {t.status === "needs_review" && t.review_reasons?.length > 0 && (
-        <ul className="card list-inside list-disc bg-amber-50 text-sm text-amber-900 ring-amber-200">
+        <ul className="card list-inside list-disc border-amber-200/70 !bg-amber-50/80 text-sm text-amber-900">
           {t.review_reasons.map((r: string) => (
             <li key={r}>{r}</li>
           ))}
@@ -42,7 +42,7 @@ export default async function EditTransactionPage({ params }: { params: Promise<
       )}
 
       {t.source === "receipt" && (
-        <div className="card grid grid-cols-2 gap-2 text-sm text-stone-600">
+        <div className="card grid grid-cols-2 gap-2 text-sm text-ink/70">
           <span>From account</span>
           <span className="text-right">{t.from_account ?? "—"}</span>
           <span>To account</span>
