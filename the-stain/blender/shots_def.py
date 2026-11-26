@@ -16,10 +16,11 @@ def build(sid):
     return S
 
 TC = Vector((0, 0.4, 0.95))
+WIDE = ((1.3, -2.65, 1.75), (-0.3, 0.6, 0.9))
 OBJ = lambda n: bpy.data.objects[n]
 SEAT = {k: Vector(v[0] + (0,)) for k, v in stain.SEATS.items()}
-HALL0 = ((1.2, -1.2, 1.5), (1.2, -8.0, 1.15), 35)   # the hallway frame (0A = 9A)
-OVER = ((0.0, 0.42, 1.80), (0.0, 0.4201, 0.0), 24)    # overhead table (0B = 10E)
+HALL0 = ((1.2, -1.2, 1.5), (1.2, -8.0, 0.45), 35)   # the hallway frame (0A = 9A)
+OVER = ((0.0, 0.42, 1.80), (0.0, 0.40, 0.0), 24)    # overhead table (0B = 10E)
 
 # ------------------------------------------------------------------ helpers
 def fdir(ang): return Vector((math.sin(ang), -math.cos(ang), 0))
@@ -27,11 +28,25 @@ def setup(S, t0, t1, loc0, tg0, lens, loc1=None, tg1=None, lens1=None):
     """Camera setup from t0 (hard cut) moving to loc1/tg1 by t1."""
     S.camera(t0, loc0, tg0, lens, ease=0.0001)
     S.camera(t1, loc1 or loc0, tg1 if tg1 is not None else tg0, lens1 or lens, ease=1.0)
-def face_cam(S, n, t, ang=0.0, dist=1.5, dz=0.02, tdz=0.0, side=0.0):
-    """Camera position looking at n's face from 'ang' degrees off their facing direction."""
+def blocked(S, n, a, b, t):
+    """Is the line a->b blocked by another character (head sphere or body column)?"""
+    from mathutils.geometry import intersect_point_line
+    for m in S.p:
+        if m == n or S.p[m].arm.hide_render: continue
+        hm = S.head_pos(m, t); root = S.root_at(m, t)
+        for c, r in ((hm, 0.24), (hm.lerp(root, 0.35), 0.24), (hm.lerp(root, 0.6), 0.22)):
+            q, u = intersect_point_line(c, a, b)
+            if 0.0 < u < 1.0 and (q - c).length < r: return True
+    return False
+def face_cam(S, n, t, ang=0.0, dist=1.5, dz=0.02, tdz=0.0, side=0.0, avoid=True):
+    """Camera position looking at n's face from 'ang' degrees off their facing direction (dodges other people)."""
     h = S.head_pos(n, t); f = S.face[n].at(t, lambda a, b, u: anim.lerp(a, b, u)) or 0.0
-    d = fdir(f + math.radians(ang)); sidev = Vector((-d.y, d.x, 0))
-    return h + d * dist + Vector((0, 0, dz)) + sidev * side, h + Vector((0, 0, tdz))
+    cands = [ang] + ([ang + s * k for k in (12, 24, 36, 48, 60) for s in (1, -1)] if avoid else [])
+    for i, a in enumerate(cands):
+        d = fdir(f + math.radians(a)); sidev = Vector((-d.y, d.x, 0))
+        loc = h + d * dist + Vector((0, 0, dz)) + sidev * side
+        if not avoid or not blocked(S, n, loc, h, t): break
+    return loc, h + Vector((0, 0, tdz))
 def cu(S, t0, t1, n, ang=0, dist=1.5, lens=85, dz=0.02, tdz=0.0, push=0.0, side=0.0):
     loc, tg = face_cam(S, n, t0, ang, dist, dz, tdz, side)
     loc1, _ = face_cam(S, n, t0, ang, dist - push, dz, tdz, side)
@@ -186,7 +201,7 @@ def body(S):
     for li, l in enumerate(cl.data.loops):
         v = verts[l.vertex_index]; uv.data[li].uv = ((v[0] - x0) / (x1 - x0), (v[1] - y0) / (y1 - y0))
     return b
-def chest_point(): return Vector((1.36, stain.BODY_POS.y - 0.45, 0.3))
+def chest_point(): return Vector((1.37, stain.BODY_POS.y - 0.1, 0.3))
 
 def act4(S):
     body(S)
@@ -203,12 +218,12 @@ def s_0A():
 
 @shot("0B")
 def s_0B():
-    S = Shot("0B", cast=("dao",)); S.fstop = 5.6
+    S = Shot("0B", cast=("dao",)); S.fstop = 5.6; S.exposure = -3.0
     setup(S, 0, S.dur, *OVER)
     S.key("dao", 0, "stand", loc=(0.0, -1.0, 0), face=(0, 1))
-    S.key("dao", 1.6, "stand", loc=(0.0, -0.62, 0)); S.key("dao", 2.4, {**C.POSES["stand_reach"], "upper_arm.L": D(0.1, -1, -0.3), "forearm.L": D(0, -1, -0.35)})
-    S.key("dao", 4.0, {**C.POSES["stand_reach"], "spine": E(22, 0, 8), "upper_arm.L": D(0.2, -1, -0.25), "forearm.L": D(0.3, -1, -0.3), "upper_arm.R": D(-0.3, -1, -0.25), "forearm.R": D(-0.2, -1, -0.3)})
-    S.key("dao", 5.6, {**C.POSES["stand_reach"], "spine": E(22, 0, -8), "upper_arm.L": D(0.4, -1, -0.25), "forearm.L": D(0.2, -1, -0.3), "upper_arm.R": D(0.0, -1, -0.25), "forearm.R": D(-0.4, -1, -0.3)})
+    S.key("dao", 1.6, "stand", loc=(0.0, -0.42, 0)); S.key("dao", 2.4, {**C.POSES["stand_reach"], "upper_arm.L": D(0.1, -1, -0.3), "forearm.L": D(0, -1, -0.35)})
+    S.key("dao", 4.0, {**C.POSES["stand_reach"], "spine": E(42, 0, 8), "upper_arm.L": D(0.2, -1, -0.25), "forearm.L": D(0.3, -1, -0.3), "upper_arm.R": D(-0.3, -1, -0.25), "forearm.R": D(-0.2, -1, -0.3)})
+    S.key("dao", 5.6, {**C.POSES["stand_reach"], "spine": E(42, 0, -8), "upper_arm.L": D(0.4, -1, -0.25), "forearm.L": D(0.2, -1, -0.3), "upper_arm.R": D(0.0, -1, -0.25), "forearm.R": D(-0.4, -1, -0.3)})
     S.key("dao", 7.5, "stand", loc=(0.0, -0.9, 0))
     cl = OBJ("tablecloth")
     path_key(S, cl, [(0, cl.location + Vector((0.1, -0.05, 0.85)), (0.04, -0.03, 0.08)), (0.5, cl.location + Vector((0.05, 0, 0.45)), (-0.02, 0.02, 0.03)),
@@ -278,7 +293,7 @@ def s_1E():
     S = Shot("1E"); S.fstop = 2.8
     stand_at_seat(S, "do", 0, "stand")
     gl = stain.make_wineglass("toast_glass", (0, 0, 0), stain.clay("wineglass", (0.85, 0.9, 0.95), 0.05, 0), stain.clay("wine", (0.3, 0.02, 0.05), 0.1, 0))
-    S.key("do", 0, "stand_toast"); S.hold(gl, "do", "R", 0, S.dur, offset=(0, 0.02, 0), rot=(math.pi, 0, 0))
+    S.key("do", 0, "stand_toast"); S.hold(gl, "do", "R", 0, S.dur, offset=(0, 0.02, 0))
     if "glass_do" in bpy.data.objects: stain.set_vis(OBJ("glass_do"), False)
     L = S.lines
     loc, tg = face_cam(S, "do", 0, 15, 2.2, -0.35, 0); setup(S, 0, L[0]["end"], loc, "do", 35)
@@ -287,7 +302,7 @@ def s_1E():
     S.look("martin", "do", 5.3, 6.5)
     cu(S, 6.5, 7.65, "dao", 0, 1.5, 85); S.look("dao", (-0.55, 0.3, 0.78), 6.6, 7.6); S.set_expr("dao", 6.6, -0.5, 0)
     loc, tg = face_cam(S, "do", 7.7, 15, 2.2, -0.35, 0); setup(S, 7.65, 10.6, loc, "do", 35)
-    setup(S, 10.6, 12.2, (2.6, -1.9, 1.6), (-0.1, 0.4, 1.0), 28)
+    setup(S, 10.6, 12.2, WIDE[0], WIDE[1], 24)
     for n in ("martin", "dao", "andy"):
         S.key(n, 10.5, "sit_glass"); S.key(n, 12.0, "sit")
     laugh(S, ("martin", "dao", "do"), 11.3, 13.0, 0.6)
@@ -311,8 +326,9 @@ def s_1F():
 def s_1G():
     S = Shot("1G"); S.fstop = 2.0
     S.key("martin", 0, "sit"); S.key("martin", 0.4, "sit_pocket", ease=0.6)
-    h = S.head_pos("martin", 0) + Vector((0, 0, -0.38))
-    setup(S, 0, S.dur, h + Vector((-0.4, -1.3, 0.05)), h, 85, h + Vector((-0.35, -1.15, 0.05)))
+    tg = ("bone", "martin", "hand.R", (0, 0, 0.05))
+    h = S.head_pos("martin", 0) + Vector((0, 0, -0.4))
+    setup(S, 0, S.dur, h + Vector((-0.5, -1.9, 0.1)), tg, 85, h + Vector((-0.45, -1.75, 0.1))); S.focus_on(0, tg)
     S.look("martin", "dao", 0, 2)
     return S
 
@@ -393,7 +409,7 @@ def s_1K():
 @shot("2A")
 def s_2A():
     S = Shot("2A")
-    setup(S, 0, S.dur, (2.6, -2.2, 1.65), (-0.2, 0.5, 1.0), 24, (2.4, -2.0, 1.6))
+    setup(S, 0, S.dur, WIDE[0], WIDE[1], 24)
     flicker(S, 1.0, 4.6, names=("key", "bounce"), seed=7)
     for n in ("martin", "dao", "andy", "do"):
         S.look(n, (0, 0.4, 1.9), 1.2, 4.8); S.gesture[n] = 0; S.set_expr(n, 1.0, -0.3, 0.6)
@@ -437,7 +453,8 @@ def s_2D():
 def s_3A():
     S = Shot("3A"); S.fstop = 2.8
     m = S.head_pos("martin", 0); d = S.head_pos("do", 0)
-    loc = m + (m - d).normalized() * 0.55 + Vector((0.22, 0, 0.12)); setup(S, 0, S.dur, loc, "do", 50)
+    back = (m - d).normalized(); side = Vector((-back.y, back.x, 0))
+    loc = m + back * 0.6 + side * 0.42 + Vector((0, 0, 0.1)); setup(S, 0, S.dur, loc, "do", 50); S.focus_on(0, "do")
     S.key("martin", 0, "sit_napkin"); vis("martin_noseblood", t_on=0, S=S)
     S.set_expr("do", 0, -0.2, 0.3); S.key("do", 0, {**C.POSES["sit"], "spine": E(-10, 0, 0)})
     return S
@@ -458,8 +475,8 @@ def s_3C():
     S.key("martin", 0.4, loc=tuple(SEAT["martin"])); S.key("martin", 1.1, "lunge", loc=(0.0, 1.0, 0), face=(0.4, -1), ease=0.8)
     S.key("do", 0.6, "sit"); S.key("do", 1.15, {**C.POSES["sit"], "spine": E(-15, 0, 0), "upper_arm.R": D(-0.6, 0.4, 0.6), "forearm.R": D(0.5, -0.5, 0.8)}, ease=0.4)
     S.key("martin", 1.3, "recoil", loc=(-0.35, 1.45, 0), ease=0.5)
-    setup(S, 0, 1.3, (2.0, 0.9, 1.4), (0.1, 0.3, 1.2), 35)
-    S.camera(1.3, (1.2, 2.5, 1.5), (-0.3, 1.3, 1.25), 50, ease=0.0001); S.camera(S.dur, (1.15, 2.45, 1.48), (-0.35, 1.4, 1.25), 50, ease=1.0)
+    setup(S, 0, 1.3, (2.6, 1.15, 1.9), (0.0, 0.25, 1.05), 35)
+    S.camera(1.3, (0.65, 0.05, 1.5), "martin", 50, ease=0.0001); S.camera(S.dur, (0.6, 0.1, 1.48), "martin", 50, ease=1.0)
     S.focus_on(1.3, "martin")
     vis("martin_noseblood", t_on=1.35, S=S); S.set_expr("martin", 1.3, -0.7, 0.8, 0.1)
     for n in ("dao", "andy"): S.set_expr(n, 1.0, -0.3, 0.8)
@@ -471,7 +488,7 @@ def s_3D():
     S.key("martin", 0, "recoil", loc=(-0.35, 1.45, 0)); stand_at_seat(S, "martin", 0, "recoil"); S.key("martin", 0, loc=(-0.35, 1.45, 0))
     S.key("do", 0, {**C.POSES["sit"], "spine": E(-15, 0, 0)})
     vis("martin_noseblood", t_on=0, S=S)
-    setup(S, 0, S.dur, (2.6, -2.2, 1.65), (-0.2, 0.5, 1.0), 24)
+    setup(S, 0, S.dur, WIDE[0], WIDE[1], 24)
     for n in S.p: S.gesture[n] = 0; S.set_expr(n, 0, -0.3, 0.6)
     S.look("dao", "martin", 0, 3); S.look("andy", "martin", 0, 3); S.look("do", "martin", 0, 3); S.look("martin", "do", 0, 3)
     return S
@@ -531,7 +548,7 @@ def s_4C():
         S.at(0.6, lambda fr: (sh.keyframe_insert("default_value", frame=fr - 2), setattr(sh, "default_value", 0), sh.keyframe_insert("default_value", frame=fr)))
     setup(S, 0, 3.9, (-1.8, 2.3, 1.6), (1.0, -0.8, 1.2), 28)
     pu = purse(DAO_LAP); S.key("dao", 0, "sit_lap"); S.key("dao", 4.3, {**C.POSES["sit_lap"], "forearm.L": D(-0.5, -0.8, -0.1), "forearm.R": D(0.5, -0.8, -0.1)}, ease=0.3)
-    setup(S, 3.9, S.dur, DAO_LAP + Vector((0.45, 0.45, 0.25)), DAO_LAP + Vector((0, 0, 0.08)), 85); S.focus_on(3.9, DAO_LAP + Vector((0, 0, 0.08)))
+    setup(S, 3.9, S.dur, DAO_LAP + Vector((-0.85, 0.05, 0.3)), DAO_LAP + Vector((0, 0, 0.08)), 85); S.focus_on(3.9, DAO_LAP + Vector((0, 0, 0.08)))
     for n in ("martin", "dao", "andy"): S.look(n, "do", 1.0, 3.9); S.set_expr(n, 1, -0.3, 0.6)
     S.set_expr("do", 0.5, 0.6, 0.6)
     return S
@@ -543,7 +560,7 @@ def s_4D():
     S.walk_to("martin", 0.0, 2.1, (1.25, -7.45), face_end=(0, -1), pose_end="door")
     S.key("martin", 2.7, "stand_pocket", ease=0.5); S.key("martin", 3.0, face=(0, 1), ease=0.5)
     setup(S, 0, 3.0, (1.2, -3.1, 1.55), (1.2, -8.0, 1.2), 35, (1.2, -4.6, 1.5), (1.2, -8.0, 1.15))
-    loc = Vector((1.05, -6.5, 1.35)); setup(S, 3.0, S.dur, loc, "martin", 50, loc + Vector((0, -0.2, 0)))
+    loc = Vector((1.2, -5.6, 1.45)); setup(S, 3.0, S.dur, loc, "martin", 35, loc + Vector((0, -0.25, 0))); S.focus_on(3.0, "martin")
     S.set_expr("martin", 3.0, 0.5, 0.2)
     return S
 
@@ -559,12 +576,12 @@ def s_4E():
     stand_at_seat(S, "dao", 0)
     S.key("dao", 0, "stand_arms_out", loc=(-1.0, 2.8, 0), face=(0, 1)); S.key("dao", 0.6, {"upper_arm.L": D(0.6, 0.4, 0.6), "upper_arm.R": D(-0.6, 0.4, 0.6), "forearm.L": D(0.6, 0.6, 0.2), "forearm.R": D(-0.6, 0.6, 0.2)})
     S.key("dao", 2.2, {"upper_arm.L": D(0.1, 0.8, 0.4), "upper_arm.R": D(-0.1, 0.8, 0.4), "forearm.L": D(0.0, 1, 0.1), "forearm.R": D(0, 1, 0.1)}, ease=0.8)
-    S.key("dao", 2.8, "stand", loc=(-1.25, 2.95, 0))
+    S.key("dao", 2.8, "stand", loc=(-1.6, 2.9, 0))
     hole = stain.HOLE_SPOT
     S.key("dao", 3.4, aim_pose(S, "dao", hole, 3.4, base="stand", hand="R"), ease=0.6); S.key("dao", 4.4, "stand", ease=0.5)
     S.look("dao", hole, 2.6, 9.4)
     setup(S, 0, 2.9, (-0.2, 0.9, 1.55), (-1.2, 3.0, 1.45), 35, (-0.3, 1.1, 1.55))
-    setup(S, 2.9, 4.6, hole + Vector((0.25, -0.55, -0.05)), hole, 85, hole + Vector((0.22, -0.45, -0.05)))
+    setup(S, 2.9, 4.6, hole + Vector((0.5, -0.35, -0.05)), hole, 85, hole + Vector((0.45, -0.3, -0.05)))
     S.focus_on(2.9, hole)
     setup(S, 4.6, 9.5, (-0.6, 1.4, 1.45), "dao", 50, (-0.7, 1.7, 1.45)); S.focus_on(4.6, "dao")
     S.key("dao", 9.4, face=(0.2, -1), ease=0.6)
@@ -574,8 +591,8 @@ def s_4E():
 
 def act2_standing(S):
     stand_at_seat(S, "martin", 0); stand_at_seat(S, "dao", 0); stand_at_seat(S, "do", 0); stand_at_seat(S, "andy", 0)
-    S.key("dao", 0, "stand", loc=(-1.35, 2.55, 0), face=(0.3, -1)); S.key("martin", 0, "stand", loc=(-0.6, 2.2, 0), face=(-0.6, 0.4))
-    S.key("andy", 0, "stand", loc=(-2.0, 2.1, 0), face=(0.6, 0.3)); S.key("do", 0, "stand", loc=(1.1, -0.9, 0), face=(-0.6, 1))
+    S.key("dao", 0, "stand", loc=(-1.6, 2.45, 0), face=(0.8, -0.2)); S.key("martin", 0, "stand", loc=(-0.9, 2.0, 0), face=(0.6, 0.4))
+    S.key("andy", 0, "stand", loc=(-1.9, 1.75, 0), face=(0.8, 0.3)); S.key("do", 0, "stand", loc=(-3.0, 0.3, 0), face=(1, 0.6))
     vis("martin_noseblood", t_on=0, S=S)
 
 @shot("4F")
@@ -585,7 +602,7 @@ def s_4F():
     ph = stain.make_phone("mphone", (0, 0, 0), (0, 0, 0), screen=None); S.key("martin", 0.3, "stand_point"); S.hold(ph, "martin", "R", 0, S.dur)
     S.key("dao", 1.6, aim_pose(S, "dao", S.head_pos("martin", 1.6) + Vector((0.05, -0.4, -0.5)), 1.6, base="stand", hand="L"), ease=0.4)
     S.key("martin", 2.0, {**C.POSES["stand"], "upper_arm.R": D(-0.2, -0.6, -0.6), "forearm.R": D(0.2, -1, 0.0)}, ease=0.4)
-    setup(S, 0, S.dur, (-1.0, 3.05, 1.42), (-1.0, 1.9, 1.38), 35, (-1.0, 2.95, 1.42))
+    setup(S, 0, S.dur, (0.55, 2.65, 1.48), (-1.35, 2.05, 1.38), 35, (0.45, 2.6, 1.46))
     S.focus_on(0, "martin"); S.look("do", "dao", 5.5, 7.5); S.look("do", "andy", 7.5, 10)
     S.set_expr("dao", 1.5, 0.4, 0); S.set_expr("do", 5.6, 0.5, 0.2)
     return S
@@ -605,9 +622,9 @@ def s_5A():
     S.key("dao", 3.8, "stand"); S.look("dao", vf, 0.5, 2.6); S.look("dao", vt, 3.0, 3.8)
     for n in ("martin", "andy", "do"): S.look(n, "dao", 0, S.dur); S.set_expr(n, 0, -0.2, 0.4)
     vis("martin_noseblood", t_on=0, S=S)
-    setup(S, 0, 1.2, (2.6, -2.2, 1.65), (-0.6, 0.1, 0.8), 28)
+    setup(S, 0, 1.2, WIDE[0], (-0.6, 0.1, 0.8), 28)
     setup(S, 1.2, 2.5, vf + Vector((0.6, -0.45, 0.25)), vf, 50, vf + Vector((0.5, -0.38, 0.22))); S.focus_on(1.2, vf)
-    setup(S, 2.5, S.dur, (0.9, -1.9, 1.4), "dao", 50); S.focus_on(2.5, "dao")
+    setup(S, 2.5, S.dur, (-1.7, 1.7, 1.45), "dao", 50); S.focus_on(2.5, "dao")
     return S
 
 @shot("5B")
@@ -616,9 +633,9 @@ def s_5B():
     palm_cut(S, t_on=0.4)
     S.key("andy", 0, {**C.POSES["sit"], "upper_arm.R": D(-0.25, -0.6, -0.7), "forearm.R": D(0.25, -0.7, 0.7), "hand.R": DT(0.25, -0.6, 0.8, 90)})
     S.key("andy", 2.3, "sit_hands_under", ease=0.5)
-    h = S.head_pos("andy", 0); hand = h + Vector((-0.38, 0.06, -0.25))
-    setup(S, 0, 2.3, hand + Vector((-0.55, -0.25, 0.1)), hand, 85, hand + Vector((-0.48, -0.22, 0.1))); S.focus_on(0, hand)
-    S.look("andy", hand, 0, 2.3); S.set_expr("andy", 0.8, -0.5, 0.5)
+    hand = ("bone", "andy", "hand.R", (0, 0, 0)); h = S.head_pos("andy", 0)
+    setup(S, 0, 2.3, h + Vector((-0.85, -0.55, -0.2)), hand, 85, h + Vector((-0.75, -0.5, -0.2))); S.focus_on(0, hand)
+    S.look("andy", h + Vector((-0.35, -0.05, -0.3)), 0, 2.3); S.set_expr("andy", 0.8, -0.5, 0.5)
     cu(S, 2.3, S.dur, "andy", 10, 1.8, 85); S.focus_on(2.3, "andy")
     vis("martin_noseblood", t_on=0, S=S)
     return S
@@ -628,8 +645,8 @@ def s_5C():
     S = Shot("5C"); S.fstop = 2.0
     scratches(S, t_on=0.5)
     S.key("martin", 0, "sit"); vis("martin_noseblood", t_on=0, S=S)
-    w = S.root_at("martin", 0) + Vector((0.22, -0.45, 0.82))
-    setup(S, 0, S.dur, w + Vector((0.45, -0.35, 0.18)), w, 85, w + Vector((0.4, -0.3, 0.16))); S.focus_on(0, w)
+    w = ("bone", "martin", "forearm.L", (0, 0, 0)); r = S.root_at("martin", 0)
+    setup(S, 0, S.dur, r + Vector((0.95, -0.75, 1.15)), w, 85, r + Vector((0.88, -0.7, 1.1))); S.focus_on(0, w)
     return S
 
 @shot("5D")
@@ -649,12 +666,24 @@ T6 = sum(anim.TL[s]["dur"] for s in ("6A", "6B", "6C", "6D", "6E"))
 def orbit(S, t0, t1, target, height=1.45, r=2.45, lens=50):
     st = anim.TL[S.id]["start"] - anim.TL["6A"]["start"]
     def pos(t):
-        a = 2 * math.pi * (st + t) / T6 + 0.6
+        a = 2 * math.pi * (st + t) / T6 + 2.8
         return Vector((math.cos(a) * r, 0.4 + math.sin(a) * r * 0.82, height))
-    S.camera(t0, pos(t0), target, lens, ease=0.0001)
-    n = max(1, int((t1 - t0) / 0.5))
+    def pick(t, prev):
+        if target != "auto": return target
+        best, bs = prev, -9
+        for m in S.p:
+            h = S.head_pos(m, t); f = S.face[m].at(t, lambda a, b, u: anim.lerp(a, b, u)) or 0.0
+            v = (pos(t) - h); v.z = 0; v.normalize(); sc_ = fdir(f).dot(v) + (0.7 if S.speaker_at(t) == m else 0) + (0.25 if m == prev else 0)
+            if blocked(S, m, pos(t), h, t): sc_ -= 2
+            if sc_ > bs: best, bs = m, sc_
+        return best
+    tg = pick(t0, None); S.camera(t0, pos(t0), tg, lens, ease=0.0001); S.focus_on(t0, None)
+    n = max(1, int((t1 - t0) / 0.5)); last = t0
     for i in range(1, n + 1):
-        t = t0 + (t1 - t0) * i / n; S.camera(t, pos(t), target, lens, ease=1.0)
+        t = t0 + (t1 - t0) * i / n
+        nt = pick(t, tg)
+        if nt != tg and t - last > 2.0: tg = nt; last = t
+        S.camera(t, pos(t), tg, lens, ease=1.0)
 def act2_props(S):
     palm_cut(S); scratches(S); vis("martin_noseblood", t_on=0, S=S)
     S.key("andy", 0, "sit")
@@ -677,13 +706,13 @@ def s_6B():
     S.key("andy", 0.85, aim_pose(S, "andy", S.head_pos("do", 0.9) + Vector((0, 0, -0.25)), 0.85, base="stand")); S.key("andy", 1.3, "stand_point")
     S.hold(ph, "andy", "R", 0.95, S.dur)
     S.key("do", 1.4, aim_pose(S, "do", S.head_pos("andy", 1.4), 1.4), ease=0.4); S.key("do", 2.4, "sit")
-    orbit(S, 0, 2.3, "do")
+    orbit(S, 0, 2.3, "auto")
     # insert: the chat
     ins = stain.make_phone("chat_insert", (2.4, -2.4, 1.2), (math.radians(80), 0, math.radians(45)), screen="phone_chat.png")
     setup(S, 2.3, 3.4, Vector((2.4, -2.4, 1.2)) + Vector((-0.17, 0.17, 0.05)), (2.4, -2.4, 1.2), 50); S.focus_on(2.3, (2.4, -2.4, 1.2))
-    orbit(S, 3.4, 7.8, "martin"); S.focus_on(3.4, "martin")
+    orbit(S, 3.4, 7.8, "auto")
     cu(S, 7.8, 9.9, "dao", 0, 1.6, 85, push=0.1); S.focus_on(7.8, "dao"); S.set_expr("dao", 7.0, -0.8, 0.3)
-    orbit(S, 9.9, S.dur, "martin"); S.focus_on(9.9, "martin")
+    orbit(S, 9.9, S.dur, "auto")
     S.set_expr("martin", 3.4, -0.2, 0); S.gesture["martin"] = 0.2
     for n in ("dao",): S.look(n, "martin", 3.5, S.dur)
     return S
@@ -698,11 +727,11 @@ def s_6C():
     rb = ring_box((0, 0, 0), open_t=2.6, S=S); S.hold(rb, "do", "R", 2.3, S.dur, offset=(0, 0.03, 0), rot=(math.pi / 2, 0, 0))
     S.key("martin", 0, "sit"); S.key("martin", 2.4, {**C.POSES["sit"], "spine": E(-12, 0, -15)})
     S.key("martin", 6.6, aim_pose(S, "martin", S.head_pos("dao", 6.6), 6.6), ease=0.4); S.key("martin", 8.6, "sit")
-    orbit(S, 0, 3.0, "do")
+    orbit(S, 0, 3.0, "auto")
     setup(S, 3.0, 6.6, S.head_pos("do", 3) + Vector((0.65, -0.95, -0.1)), "do", 50); S.focus_on(3.0, "do")
     cu(S, 6.6, 8.6, "martin", 10, 1.7, 85); S.focus_on(6.6, "martin")
     cu(S, 8.6, 10.1, "dao", 0, 1.7, 85); S.focus_on(8.6, "dao"); S.mouth("dao", 9.0, 9.6, 0.25)
-    orbit(S, 10.1, S.dur, "do"); S.focus_on(10.1, "do")
+    orbit(S, 10.1, S.dur, "auto")
     S.mouth("do", 5.9, 6.6, 0.8); S.set_expr("do", 3.4, -0.2, 0.3); S.set_expr("martin", 6.5, -0.8, 0.4)
     S.look("dao", "do", 10.0, S.dur); S.look("martin", "do", 10.0, S.dur)
     return S
@@ -718,7 +747,7 @@ def s_6D():
     S.key("do", 2.4, aim_pose(S, "do", S.head_pos("andy", 2.4) + Vector((0, 0, -0.4)), 2.4, base="stand")); S.key("do", 2.9, "stand_point")
     S.hold(ph, "do", "R", 2.5, S.dur)
     ring_box(Vector((-0.15, 0.62, stain.TABLE_TOP)))
-    orbit(S, 0, 3.1, "andy")
+    orbit(S, 0, 3.1, "auto")
     ins = stain.make_phone("threat_insert", (2.4, -2.4, 1.2), (math.radians(80), 0, math.radians(45)), screen="phone_threats.png")
     p = Vector((2.4, -2.4, 1.2))
     setup(S, 3.1, 7.5, p + Vector((-0.18, 0.18, 0.12)), p + Vector((0, 0, 0.04)), 50, p + Vector((-0.16, 0.16, 0.0)), p + Vector((0, 0, -0.04))); S.focus_on(3.1, p)
@@ -809,7 +838,7 @@ def s_8A():
     S.key("andy", 1.2, "kneel", ease=0.5)
     S.key("andy", 1.6, {**C.POSES["kneel"], **{k: v for k, v in aim_pose(S, "andy", stain.HOLE_SPOT, 1.6, base="kneel", both=True).items() if "arm" in k or "hand" in k}}, ease=0.4)
     S.look("andy", stain.HOLE_SPOT, 1.4, S.dur)
-    setup(S, 0, S.dur, (-0.4, -0.6, 0.9), (-1.6, 1.0, 0.7), 35, (-0.6, -0.4, 0.85))
+    setup(S, 0, S.dur, (-0.1, 1.9, 1.3), (-1.6, 0.8, 0.6), 35, (-0.2, 1.95, 1.25))
     for n in ("martin", "dao", "do"): S.look(n, "andy", 0.3, S.dur); S.set_expr(n, 0.5, -0.4, 0.7)
     return S
 
@@ -824,7 +853,7 @@ def s_8B():
     S.key("do", 0, "stand", loc=(-0.6, -1.35, 0)); S.key("do", 0.5, "lunge", loc=(-1.3, 0.2, 0), face="andy", ease=0.8)
     S.key("do", 0.9, "lying", loc=(-1.45, 0.85, 0), face=(-0.6, 1), ease=0.4); S.key("andy", 0.95, "floor_gun", ease=0.4)
     S.key("andy", 2.0, "floor_sit", ease=0.6); S.key("andy", 3.0, "floor_gun", ease=0.5); S.key("do", 2.5, "floor_sit", ease=0.6); S.key("do", 3.6, "lunge", ease=0.5)
-    setup(S, 0, S.dur, (-0.2, -0.3, 1.1), (-1.5, 0.8, 0.5), 28, (-0.4, -0.1, 1.0))
+    setup(S, 0, S.dur, (-0.3, 2.1, 1.5), (-1.45, 0.7, 0.4), 28, (-0.35, 2.0, 1.45))
     S.set_expr("do", 0, 0.8, 0.6); S.set_expr("andy", 0.8, 0.8, 0.4)
     return S
 
@@ -862,7 +891,7 @@ def s_8D():
     S.key("andy", 9.0, "stand", loc=(-1.5, 0.3, 0), ease=0.5); S.key("do", 10.0, "stand", ease=0.5)
     S.walk_to("martin", 9.0, S.dur, (0.4, -1.4), (0.9, -2.2)); S.walk_to("dao", 9.4, S.dur, (0.2, -1.6), (1.4, -2.3))
     S.walk_to("andy", 10.2, S.dur, (0.0, -1.2), (1.1, -2.0)); S.walk_to("do", 10.8, S.dur, (0.2, -1.0), (1.2, -1.8))
-    setup(S, 0, S.dur, (2.4, -2.0, 1.7), (-0.8, 0.4, 0.6), 24)
+    setup(S, 0, S.dur, WIDE[0], (-0.8, 0.4, 0.6), 24)
     for n in S.p: S.gesture[n] = 0.3
     return S
 
@@ -916,10 +945,10 @@ def s_9D():
     S.look("do", "andy", 5.4, 7.2); S.look("do", "martin", 7.6, 9.4); S.look("do", "dao", 10.0, S.dur)
     S.set_expr("do", 2.4, 0.4, 0.7)
     for n in ("martin", "andy", "dao"): S.look(n, "do", 2.8, S.dur)
-    setup(S, 0, 2.6, (2.4, -2.2, 1.6), (-0.6, 0.2, 0.7), 24)
+    setup(S, 0, 2.6, (1.45, -3.6, 2.3), (-0.7, 0.4, 0.6), 24)
     cu(S, 2.6, 5.4, "do", 0, 2.2, 50, dz=-0.1); S.focus_on(2.6, "do")
     cu(S, 5.4, 7.6, "andy", 10, 1.8, 85); S.focus_on(5.4, "andy")
-    cu(S, 7.6, 10.0, "do", 0, 1.8, 85, dz=-0.05); S.focus_on(7.6, "do")
+    setup(S, 7.6, 10.0, (-0.35, -1.25, 1.05), "do", 50); S.focus_on(7.6, "do")
     cu(S, 10.0, S.dur, "do", -20, 1.6, 85, dz=-0.05); S.focus_on(10.0, "do")
     S.handheld = 0.8
     return S
@@ -980,7 +1009,7 @@ def s_10C():
         S.key("andy", 3.0 + i * 0.8, aim_pose(S, "andy", OBJ(f"glass_{n}").location + Vector((0, 0, 0.25)), 3.0 + i * 0.8), ease=0.5)
     S.key("andy", 6.2, "sit")
     S.look("andy", (0.3, 0.4, 0.8), 2.5, 6.0); S.look("andy", "do", 6.0, S.dur)
-    setup(S, 0, S.dur, (2.9, 1.9, 1.5), (1.2, 0.3, 0.95), 35, (2.75, 1.75, 1.45)); S.focus_on(0, "andy")
+    setup(S, 0, S.dur, (0.35, 1.75, 1.55), (1.5, 0.3, 0.9), 35, (0.45, 1.7, 1.52)); S.focus_on(0, "andy")
     return S
 
 @shot("10D")
@@ -992,12 +1021,12 @@ def s_10D():
     S.walk_to("martin", 3.4, 6.5, (1.0, -2.2), (-0.3, 1.0), (-0.55, 1.32), face_end=(0, -1)); sit_down(S, "martin", 6.6)
     S.walk_to("dao", 0.5, 2.2, (-0.55, -0.1), (-0.55, -0.52), face_end=(0, 1)); sit_down(S, "dao", 2.3)
     S.look("do", "martin", 2.5, S.dur)
-    setup(S, 0, S.dur, (2.6, -2.4, 1.7), (0.2, -0.6, 1.0), 24)
+    setup(S, 0, S.dur, (2.2, 2.6, 1.8), (0.4, -1.2, 0.9), 24)
     return S
 
 @shot("10E")
 def s_10E():
-    S = Shot("10E", extra_state={"new_stain": True, "door_open": True}); S.fstop = 5.6; act4_standoff(S)
+    S = Shot("10E", extra_state={"new_stain": True, "door_open": True}); S.fstop = 5.6; act4_standoff(S); S.exposure = -3.0
     for n in ("martin", "dao", "andy"): S.seat(n)
     S.key("do", 0, "stand_gun", loc=(-0.2, -0.95, 0), face=(0.5, -1))
     ns = OBJ("new_stain")
@@ -1012,10 +1041,12 @@ def s_10E():
 
 @shot("10F")
 def s_10F():
-    S = Shot("10F", extra_state={"new_stain": True, "door_open": True}); S.fstop = 5.6; act4_standoff(S)
+    S = Shot("10F", extra_state={"new_stain": True, "door_open": True}); S.fstop = 5.6; act4_standoff(S); S.exposure = -3.5
     for n in ("martin", "dao", "andy"): S.seat(n)
     S.key("do", 0, "stand_gun", loc=(-0.2, -0.95, 0), face=(0.5, -1))
     for n in ("ceiling", "hall_ceiling", "pendant_cord"): OBJ(n).visible_camera = False
+    vs = bpy.context.scene.view_settings
+    S.at(0, lambda fr: (setattr(vs, "exposure", -3.0), vs.keyframe_insert("exposure", frame=1), setattr(vs, "exposure", -0.8), vs.keyframe_insert("exposure", frame=S.f(3.5))))
     S.camera(0, Vector(OVER[0]), Vector(OVER[1]), 24, ease=0.0001)
     S.camera(S.dur, Vector((0.9, -1.0, 6.2)), Vector((0.8, -2.0, 0.0)), 24, ease=1.0)
     return S

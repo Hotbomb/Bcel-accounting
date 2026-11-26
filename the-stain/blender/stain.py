@@ -52,7 +52,8 @@ def tex_mat(name, image, rough=0.7, emit=0.0, alpha=False, scale=(1, 1), bump=0.
     nt.links.new(col, b.inputs["Base Color"]); b.inputs["Roughness"].default_value = rough
     if emit:
         nt.links.new(col, b.inputs["Emission Color"]); b.inputs["Emission Strength"].default_value = emit
-    if alpha: nt.links.new(t.outputs["Alpha"], b.inputs["Alpha"])
+    if alpha:
+        nt.links.new(t.outputs["Alpha"], b.inputs["Alpha"]); b.inputs["Specular IOR Level"].default_value = 0.05; b.inputs["Roughness"].default_value = 0.9
     if bump:
         bp = nt.nodes.new("ShaderNodeBump"); bp.inputs["Strength"].default_value = bump
         nt.links.new(t.outputs["Color"], bp.inputs["Height"]); nt.links.new(bp.outputs["Normal"], b.inputs["Normal"])
@@ -64,6 +65,13 @@ def emission_only(name, rgb, strength, camera_only=False, transparent_mix=0.0):
     out = nt.nodes.new("ShaderNodeOutputMaterial"); em = nt.nodes.new("ShaderNodeEmission")
     em.inputs["Color"].default_value = (*rgb, 1); em.inputs["Strength"].default_value = strength
     shader = em.outputs[0]
+    if camera_only:  # soft edges: fade where the surface turns away from the camera
+        lw = nt.nodes.new("ShaderNodeLayerWeight"); lw.inputs["Blend"].default_value = 0.5
+        inv = nt.nodes.new("ShaderNodeMath"); inv.operation = "SUBTRACT"; inv.inputs[0].default_value = 1.0
+        mul = nt.nodes.new("ShaderNodeMath"); mul.operation = "MULTIPLY"; mul.inputs[1].default_value = strength
+        pw = nt.nodes.new("ShaderNodeMath"); pw.operation = "POWER"; pw.inputs[1].default_value = 2.0
+        nt.links.new(lw.outputs["Facing"], inv.inputs[1]); nt.links.new(inv.outputs[0], pw.inputs[0]); nt.links.new(pw.outputs[0], mul.inputs[0])
+        nt.links.new(mul.outputs[0], em.inputs["Strength"])
     if transparent_mix or camera_only:
         tr = nt.nodes.new("ShaderNodeBsdfTransparent"); ad = nt.nodes.new("ShaderNodeAddShader")
         nt.links.new(em.outputs[0], ad.inputs[0]); nt.links.new(tr.outputs[0], ad.inputs[1]); shader = ad.outputs[0]
@@ -483,11 +491,15 @@ def build_lights(st):
         area("bounce", (0, 0.4, 2.75), (math.pi, 0, 0), 8, 3.0, K2700)
         bpy.ops.object.light_add(type="AREA", location=(1.2, -5.0, 2.5)); h = bpy.context.active_object; h.name = "hall_bulb_light"
         h.data.energy = 22; h.data.size = 0.1; h.data.color = K4000; L["hall"] = h
+        bpy.ops.object.light_add(type="AREA", location=(1.2, -2.7, 2.3), rotation=(math.radians(-55), 0, 0)); fc = bpy.context.active_object; fc.name = "fill_cold"
+        fc.data.energy = 30; fc.data.size = 1.5; fc.data.color = (0.75, 0.82, 1.0); fc.visible_camera = False; L["fill_cold"] = fc
     elif s == "act34":
         area("key", (0, 0.4, 1.84), (0, 0, 0), 150, 0.15, K2700, spread=math.radians(70))
         area("bounce", (0, 0.4, 2.75), (math.pi, 0, 0), 5, 3.0, K2700)
         bpy.ops.object.light_add(type="AREA", location=(1.2, -5.0, 2.5)); h = bpy.context.active_object; h.name = "hall_bulb_light"
         h.data.energy = 30; h.data.size = 0.1; h.data.color = (1.0, 0.86, 0.62); L["hall"] = h
+        bpy.ops.object.light_add(type="AREA", location=(1.2, -2.7, 2.3), rotation=(math.radians(-55), 0, 0)); fc = bpy.context.active_object; fc.name = "fill_cold"
+        fc.data.energy = 30; fc.data.size = 1.5; fc.data.color = (0.75, 0.82, 1.0); fc.visible_camera = False; L["fill_cold"] = fc
     if st["beam"]:
         build_beam(L)
     w = bpy.data.worlds.new("world"); sc.world = w; w.use_nodes = True
@@ -497,7 +509,7 @@ def build_lights(st):
 def build_beam(L):
     d = (BEAM_END - HOLE_SPOT); length = d.length; dn = d.normalized()
     # visible shaft (camera rays only)
-    c = cyl("beam_shaft", 0.012, length, (0, 0, 0), emission_only("beam", (0.7, 0.82, 1.0), 1.6, camera_only=True, transparent_mix=1), r2=0.05, seg=16)
+    c = cyl("beam_shaft", 0.012, length, (0, 0, 0), emission_only("beam", (0.6, 0.75, 1.0), 0.06, camera_only=True, transparent_mix=1), r2=0.09, seg=16)
     q = Vector((0, 0, -1)).rotation_difference(dn)
     c.rotation_mode = "QUATERNION"; c.rotation_quaternion = q; c.location = HOLE_SPOT + dn * length / 2
     c.visible_shadow = False; c.visible_diffuse = False; c.visible_glossy = False

@@ -14,7 +14,7 @@ S = shots_def.build(a.shot)
 sc = bpy.context.scene
 ROOT = os.path.join(HERE, "..")
 sc.render.engine = "CYCLES"; sc.cycles.device = "CPU"
-sc.cycles.samples = a.samples or (6 if a.preview else 14)
+sc.cycles.samples = a.samples or (6 if a.preview else 10)
 sc.cycles.use_adaptive_sampling = True; sc.cycles.adaptive_threshold = 0.04
 sc.cycles.use_denoising = True; sc.cycles.denoiser = "OPENIMAGEDENOISE"
 sc.cycles.max_bounces = 4; sc.cycles.diffuse_bounces = 2; sc.cycles.glossy_bounces = 2; sc.cycles.transmission_bounces = 2

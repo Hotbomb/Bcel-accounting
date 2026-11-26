@@ -150,8 +150,8 @@ def build_head(nm, name, lk, skin, hairm, attach, st):
             g = bpy.context.active_object; g.name = nm + f"_glass{sx}"; g.data.materials.append(gm); attach(g, "head")
         attach(box(nm + "_bridge", (0.03, 0.008, 0.008), hc + Vector((0, -0.172, 0.04)), gm), "head")
     # blood / marks (continuity)
-    blood = clay("blood", (0.07, 0.0, 0.006), 0.2, 0)
-    f["nose_blood"] = attach(capsule(nm + "_noseblood", 0.008, 0.075, blood, loc=hc + Vector((0.01, -0.153, -0.115)), scale=(1.1, 0.5, 1)), "head")
+    blood = clay("blood", (0.022, 0.0, 0.002), 0.45, 0)
+    f["nose_blood"] = attach(capsule(nm + "_noseblood", 0.0055, 0.07, blood, loc=hc + Vector((0.01, -0.153, -0.115)), scale=(1.1, 0.5, 1)), "head")
     f["nose_blood"].hide_render = (not st.get("martin_nose", False)) or name != "martin"
     return f
 

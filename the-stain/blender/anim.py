@@ -16,7 +16,8 @@ def facing_angle(f): return math.atan2(f[0], -f[1])
 class Track:
     """Piecewise keys (t, value) with smoothstep blending; value can be anything a blend fn handles."""
     def __init__(self): self.k = []
-    def add(self, t, v, ease=0.35): self.k.append((t, v, ease)); self.k.sort(key=lambda x: x[0])
+    def add(self, t, v, ease=0.35):
+        self.k = [k for k in self.k if abs(k[0] - t) > 1e-6]; self.k.append((t, v, ease)); self.k.sort(key=lambda x: x[0])
     def at(self, t, blend):
         if not self.k: return None
         if t <= self.k[0][0]: return self.k[0][1]
@@ -51,7 +52,7 @@ class Shot:
         self.events = []
         self.lines = self.tl["lines"]
         self.env = {}
-        self.exposure = -0.7
+        self.exposure = {"act1": -0.7, "candles": -0.4, "act2": -0.45, "act3": -0.1, "act34": -0.1}.get(self.st["light"], -0.7)
 
     # ---------------- character direction ----------------
     def seat(self, n, t=0.0, pose=None):
@@ -141,6 +142,11 @@ class Shot:
         self.camtrack.add(t, (Vector(loc), target, lens), ease)
     def focus_on(self, t, target): self.focus.add(t, target, 0.0001)
     def _target_pos(self, target, t):
+        if isinstance(target, tuple) and target and target[0] == "bone":
+            _, n, bone, off = target
+            bpy.context.view_layer.update()
+            arm = self.p[n].arm; pb = arm.pose.bones[bone]
+            return arm.matrix_world @ pb.matrix @ Vector((0, pb.length * 0.6, 0)) + Vector(off)
         if isinstance(target, str):
             if target in self.p: return self.head_pos(target, t)
             return Vector(stain.SEATS.get(target, ((0, 0), 0))[0] + (1.2,))
@@ -158,7 +164,7 @@ class Shot:
         self.cam = cam
         if eyelight:  # faint catch light that follows the camera (glossy only)
             bpy.ops.object.light_add(type="POINT"); el = bpy.context.active_object; el.name = "eyelight"
-            el.data.energy = 2.0; el.data.color = (1, 0.95, 0.9); el.data.shadow_soft_size = 0.05
+            el.data.energy = 6.0; el.data.color = (1, 0.95, 0.9); el.data.shadow_soft_size = 0.05
             el.visible_diffuse = False; el.visible_volume_scatter = False
             el.parent = cam; el.location = (0.15, 0.1, 0)
         blinks = {n: self._blink_times(n) for n in self.p}
