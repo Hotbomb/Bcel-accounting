@@ -39,7 +39,7 @@ scripts/render_queue.sh 6600   # resumable; encodes + commits each finished shot
 - [x] 1J (rendered 2026-11-26)
 - [x] 1K (rendered 2026-11-26)
 - [x] 2A (rendered 2026-11-26)
-- [ ] 2B (48 unique frames)
+- [x] 2B (rendered 2026-11-26)
 - [ ] 2C (72 unique frames)
 - [ ] 2D (96 unique frames)
 - [ ] 3A (48 unique frames)
