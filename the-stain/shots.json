@@ -1,0 +1,1686 @@
+[
+ {
+  "id": "0-0",
+  "scene": 0,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 5,
+  "desc": "Black. The hum, nothing else.",
+  "lines": [],
+  "post": 1.0,
+  "hum": "hum_1",
+  "sfx": [
+   [
+    "black",
+    0
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "0A",
+  "scene": 0,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 9,
+  "desc": "HALLWAY FRAME: empty tiled hallway, front door at far end. Bulb flickers once. Hold too long. O.S. tablecloth snap.",
+  "lines": [
+   {
+    "char": "martin",
+    "th": "ไฟตรงทางเดินกะพริบมาทั้งอาทิตย์แล้ว",
+    "en": "That hallway light's been flickering all week.",
+    "pre": 3.5,
+    "flags": [
+     "os"
+    ]
+   }
+  ],
+  "post": 2.5,
+  "hum": null,
+  "sfx": [
+   [
+    "cloth_snap",
+    1.2
+   ],
+   [
+    "bulb_flicker",
+    2.4
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "0B",
+  "scene": 0,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 8,
+  "desc": "OVERHEAD TABLE: white cloth floats down and settles, Dao's hands smooth it. Pure white.",
+  "lines": [
+   {
+    "char": "dao",
+    "th": "ใครเขาปูผ้าขาวกินไวน์แดงกันเนี่ย",
+    "en": "Who puts out a white cloth with red wine?",
+    "pre": 2.2,
+    "flags": []
+   },
+   {
+    "char": "andy",
+    "th": "เดี๋ยวก็เลอะ",
+    "en": "It's going to get ruined.",
+    "pre": 0.5,
+    "flags": [
+     "os"
+    ]
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [
+   [
+    "cloth_settle",
+    0.6
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "0C",
+  "scene": 0,
+  "act": 1,
+  "matte": 2.39,
+  "light": "black",
+  "min": 3,
+  "desc": "Title card: THE STAIN / รอยเปื้อน",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": "THE STAIN|รอยเปื้อน"
+ },
+ {
+  "id": "1A",
+  "scene": 1,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 10,
+  "desc": "Wide master 24mm, slow dolly in from window side. All four at table. Song plays clean from speaker; Do reaches and skips it. Laughter.",
+  "lines": [
+   {
+    "char": "do",
+    "th": "เพลงเศร้าไปป่ะ วันเกิดกูนะเว้ย",
+    "en": "Bit sad, no? It's my birthday.",
+    "pre": 3.6,
+    "flags": []
+   }
+  ],
+  "post": 2.0,
+  "hum": null,
+  "sfx": [
+   [
+    "song_clean",
+    0.0
+   ],
+   [
+    "song_skip",
+    3.4
+   ],
+   [
+    "laughter",
+    6.5
+   ],
+   [
+    "room_act1",
+    0
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "1B",
+  "scene": 1,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 4,
+  "desc": "Insert 50mm: Dao's phone with grey memorial-style meme 'HBD ตำนาน 🕊️ 1998 – 2026'.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "1C",
+  "scene": 1,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 8,
+  "desc": "Medium 4-shot 35mm. Phone goes around, everyone howls, Do laughs hardest.",
+  "lines": [
+   {
+    "char": "martin",
+    "th": "ใครโพสต์วะเนี่ย",
+    "en": "Who posted this?",
+    "pre": 0.8,
+    "flags": []
+   },
+   {
+    "char": "andy",
+    "th": "ไอ้เต้ยที่ออฟฟิศ",
+    "en": "Tey from the office.",
+    "pre": 0.3,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "รีโพสต์เลย ตายตาหลับละกู",
+    "en": "Repost it. Now I can die happy.",
+    "pre": 0.4,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [
+   [
+    "laughter",
+    0.1
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "1D",
+  "scene": 1,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 7,
+  "desc": "Medium on Do, pops champagne; cork shoots past Martin's head, cracks against window center-left. Insert window scuff. Cheers.",
+  "lines": [
+   {
+    "char": "dao",
+    "th": "กระจกแตกป่ะ",
+    "en": "Did it crack?",
+    "pre": 2.6,
+    "flags": []
+   },
+   {
+    "char": "martin",
+    "th": "ไม่เป็นไร ๆ",
+    "en": "It's fine, it's fine.",
+    "pre": 0.2,
+    "flags": []
+   }
+  ],
+  "post": 1.2,
+  "hum": null,
+  "sfx": [
+   [
+    "cork_pop",
+    1.0
+   ],
+   [
+    "cork_glass",
+    1.25
+   ],
+   [
+    "cheer",
+    1.6
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "1E",
+  "scene": 1,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 20,
+  "desc": "Do stands for toast, slightly low 35mm; reaction close-ups. Martin's jaw tightens, Dao's eyes drop. Andy not laughing.",
+  "lines": [
+   {
+    "char": "do",
+    "th": "ขอบคุณที่มากันนะ... มาร์ติน ขอบใจที่ให้ยืมบ้าน... ดาว... คนที่รู้ใจกูที่สุด",
+    "en": "Thanks for coming... Martin, thanks for the house... Dao... the one who knows me best.",
+    "pre": 1.0,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "แล้วก็แอนดี้ คืนนี้ค่าเหล้าแอนดี้เลี้ยง ยังติดกูอยู่นี่หว่า",
+    "en": "And Andy, drinks tonight are on Andy. He still owes me.",
+    "pre": 2.4,
+    "flags": []
+   },
+   {
+    "char": "all",
+    "th": "ชน!",
+    "en": "Cheers!",
+    "pre": 0.4,
+    "flags": []
+   }
+  ],
+  "post": 2.5,
+  "hum": null,
+  "sfx": [
+   [
+    "glass_clink",
+    "after:2"
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "1F",
+  "scene": 1,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 6,
+  "desc": "Medium on Dao: purse slips off chair, heavy THUD. She puts it on her lap.",
+  "lines": [
+   {
+    "char": "andy",
+    "th": "ในกระเป๋ามีอะไรวะ อิฐเหรอ",
+    "en": "What's in there, a brick?",
+    "pre": 1.6,
+    "flags": []
+   },
+   {
+    "char": "dao",
+    "th": "เรื่องของผู้หญิงน่า",
+    "en": "Girl stuff.",
+    "pre": 0.4,
+    "flags": []
+   }
+  ],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [
+   [
+    "purse_thud",
+    0.8
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "1G",
+  "scene": 1,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 2,
+  "desc": "CU 85mm Martin's hand touches his jacket pocket.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "1H",
+  "scene": 1,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 10,
+  "desc": "CU tablecloth: wine stain already there. Martin frowns, rubs, smells finger. His glass is empty. Behind him Andy only now opens the red wine.",
+  "lines": [
+   {
+    "char": "martin",
+    "th": "ใครทำไวน์หกเนี่ย",
+    "en": "Who spilled wine?",
+    "pre": 2.5,
+    "flags": []
+   },
+   {
+    "char": "andy",
+    "th": "เพิ่งจะเปิดเนี่ย",
+    "en": "I'm only just opening it.",
+    "pre": 0.4,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "ยังไม่มีใครรินเลยด้วยซ้ำ",
+    "en": "Nobody's even poured yet.",
+    "pre": 0.3,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [
+   [
+    "cork_screw",
+    4.5
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "1I",
+  "scene": 1,
+  "act": 1,
+  "matte": 2.39,
+  "light": "candles",
+  "min": 15,
+  "desc": "Lights down, cake comes in. Birthday song. CU Do lit by candles, eyes closed, wish, blows out candles.",
+  "lines": [
+   {
+    "char": "all",
+    "th": "สุขสันต์วันเกิด สุขสันต์วันเกิด",
+    "en": "Happy birthday, happy birthday",
+    "pre": 0.8,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "ขอให้คืนนี้... ไม่มีวันจบ",
+    "en": "I wish tonight... never ends.",
+    "pre": 2.0,
+    "flags": []
+   },
+   {
+    "char": "andy",
+    "th": "ระวังปากหน่อย",
+    "en": "Careful what you wish for.",
+    "pre": 1.4,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [
+   [
+    "bday_tune",
+    0.6
+   ],
+   [
+    "blow_candles",
+    "after:1"
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "1J",
+  "scene": 1,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 14,
+  "desc": "4-shot 35mm. Dao's game. All three point at Do. Huge laugh. Do raises glass.",
+  "lines": [
+   {
+    "char": "dao",
+    "th": "เล่นเกมกัน ถ้าเราติดอยู่ในห้องนี้ แล้วต้องมีคนนึง 'ไป'... จะเลือกใคร นับสาม",
+    "en": "Game: if we were stuck in this room and one of us had to 'go'... who? On three.",
+    "pre": 0.8,
+    "flags": []
+   },
+   {
+    "char": "all",
+    "th": "หนึ่ง สอง สาม!",
+    "en": "One, two, three!",
+    "pre": 0.4,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "ยุติธรรมดี",
+    "en": "Fair.",
+    "pre": 1.6,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [
+   [
+    "laughter",
+    "after:1"
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "1K",
+  "scene": 1,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 10,
+  "desc": "2-shot Andy & Do; Andy laughs too hard, knocks glass. Slow-mo insert: wine lands exactly on existing stain.",
+  "lines": [
+   {
+    "char": "martin",
+    "th": "เดจาวูว่ะ",
+    "en": "Déjà vu.",
+    "pre": 5.0,
+    "flags": []
+   },
+   {
+    "char": "dao",
+    "th": "บังเอิญน่า",
+    "en": "Coincidence.",
+    "pre": 0.8,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [
+   [
+    "laughter",
+    0.3
+   ],
+   [
+    "glass_knock",
+    1.6
+   ],
+   [
+    "wine_splash",
+    2.6
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "2A",
+  "scene": 2,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 6,
+  "desc": "Wide. hum_2 rises. Pendant flickers. Everyone still. Then it stops.",
+  "lines": [],
+  "post": 1.0,
+  "hum": "hum_2",
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "2B",
+  "scene": 2,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 4,
+  "desc": "CU Martin, handheld begins. Head snaps back as if punched; nose bleeds.",
+  "lines": [
+   {
+    "char": "martin",
+    "th": "โอ๊ย! ใครต่อยกูวะ!",
+    "en": "Ow! Who hit me?!",
+    "pre": 0.7,
+    "flags": []
+   }
+  ],
+  "post": 0.6,
+  "hum": null,
+  "sfx": [
+   [
+    "punch_thud",
+    0.35
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "2C",
+  "scene": 2,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 6,
+  "desc": "Fast whip pans across faces.",
+  "lines": [
+   {
+    "char": "andy",
+    "th": "ไม่มีใครแตะมึงเลย",
+    "en": "Nobody touched you.",
+    "pre": 0.3,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "นั่งห่างตั้งสองเมตร",
+    "en": "We're two meters away.",
+    "pre": 0.4,
+    "flags": []
+   }
+  ],
+  "post": 0.8,
+  "hum": null,
+  "sfx": [
+   [
+    "whoosh",
+    0.0
+   ],
+   [
+    "whoosh",
+    "after:0"
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "2D",
+  "scene": 2,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 8,
+  "desc": "Medium Martin presses napkin to nose; blood drops hit cloth. He checks jacket pocket. Dao watches Do, Do watches Martin.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "3A",
+  "scene": 3,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 4,
+  "desc": "OTS on Do 50mm, smirking.",
+  "lines": [
+   {
+    "char": "do",
+    "th": "เล่นใหญ่ไปไหม ดาราเลยนะมึง",
+    "en": "A bit dramatic, aren't you? A real movie star.",
+    "pre": 0.5,
+    "flags": []
+   }
+  ],
+  "post": 0.6,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "3B",
+  "scene": 3,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 5,
+  "desc": "CU Martin, low.",
+  "lines": [
+   {
+    "char": "martin",
+    "th": "มึงรู้ตัวดีว่ามึงทำอะไรไว้",
+    "en": "You know exactly what you've done.",
+    "pre": 0.6,
+    "flags": []
+   },
+   {
+    "char": "dao",
+    "th": "มาร์ติน...",
+    "en": "Martin...",
+    "pre": 0.3,
+    "flags": []
+   }
+  ],
+  "post": 0.4,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "3C",
+  "scene": 3,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 4,
+  "desc": "2-shot: Martin lunges across table corner; Do's elbow flies up; cut on impact. Martin stumbles back bleeding the same way.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [
+   [
+    "chair_scrape",
+    0.2
+   ],
+   [
+    "punch_thud",
+    1.3
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "3D",
+  "scene": 3,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 3,
+  "desc": "Wide static. Total silence. Nobody moves.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [
+   [
+    "silence",
+    0
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "3E",
+  "scene": 3,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 14,
+  "desc": "Slow push-in on Dao 50mm.",
+  "lines": [
+   {
+    "char": "dao",
+    "th": "มันมาก่อน... เลือดมันออกก่อนที่จะโดน",
+    "en": "It came first... the blood came before the hit.",
+    "pre": 1.0,
+    "flags": []
+   },
+   {
+    "char": "andy",
+    "th": "พูดอะไรของแก",
+    "en": "What are you talking about?",
+    "pre": 0.6,
+    "flags": []
+   },
+   {
+    "char": "dao",
+    "th": "รอยไวน์ด้วย มันเปื้อนก่อนที่แก้วจะหก... ผลมันมาก่อนเหตุ",
+    "en": "The wine too. It stained before the glass fell... the effect comes before the cause.",
+    "pre": 0.6,
+    "flags": []
+   }
+  ],
+  "post": 1.2,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "3F",
+  "scene": 3,
+  "act": 1,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 3,
+  "desc": "Medium Martin grabs jacket, heads for hallway.",
+  "lines": [
+   {
+    "char": "martin",
+    "th": "กูไม่อยู่แล้ว",
+    "en": "I'm out.",
+    "pre": 0.5,
+    "flags": []
+   }
+  ],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "4A",
+  "scene": 4,
+  "act": 2,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 8,
+  "desc": "Medium Andy, then slow push-in on the window: bullet hole with radial cracks where the cork hit.",
+  "lines": [
+   {
+    "char": "andy",
+    "th": "เดี๋ยว! ...หน้าต่าง",
+    "en": "Wait! ...The window.",
+    "pre": 0.4,
+    "flags": []
+   }
+  ],
+  "post": 4.5,
+  "hum": "hum_3",
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "4B",
+  "scene": 4,
+  "act": 2,
+  "matte": 2.39,
+  "light": "act1",
+  "min": 4,
+  "desc": "Four quick reaction singles.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "4C",
+  "scene": 4,
+  "act": 2,
+  "matte": 2.39,
+  "light": "act2",
+  "min": 6,
+  "desc": "Medium wide: Do spins, knocks floor lamp over (fill dies). CU Dao's hands tighten on purse.",
+  "lines": [
+   {
+    "char": "do",
+    "th": "ใครมีปืน",
+    "en": "Who has a gun?",
+    "pre": 1.2,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "ใครมีปืน!",
+    "en": "WHO HAS A GUN?!",
+    "pre": 1.2,
+    "flags": []
+   }
+  ],
+  "post": 1.8,
+  "hum": null,
+  "sfx": [
+   [
+    "lamp_fall",
+    0.5
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "4D",
+  "scene": 4,
+  "act": 2,
+  "matte": 2.39,
+  "light": "act2",
+  "min": 6,
+  "desc": "Martin walks to hallway door, locks it, pockets key next to the pocket he keeps touching.",
+  "lines": [
+   {
+    "char": "martin",
+    "th": "มีคนอยู่ข้างนอก",
+    "en": "Someone's outside.",
+    "pre": 3.2,
+    "flags": []
+   }
+  ],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [
+   [
+    "lock_click",
+    2.4
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "4E",
+  "scene": 4,
+  "act": 2,
+  "matte": "2.39>1.85",
+  "light": "act2",
+  "min": 16,
+  "desc": "Dao pulls curtains shut, city noise cuts, mattes slide to 1.85. CU curtain already has a hole; finger through it; cold beam born.",
+  "lines": [
+   {
+    "char": "dao",
+    "th": "ม่านก็มีรู...",
+    "en": "The curtain has a hole too...",
+    "pre": 4.5,
+    "flags": []
+   },
+   {
+    "char": "dao",
+    "th": "แปลว่าตอนที่ปืนลั่น ม่านจะปิดอยู่",
+    "en": "That means when the gun goes off, the curtains will be closed.",
+    "pre": 1.2,
+    "flags": []
+   },
+   {
+    "char": "dao",
+    "th": "เราจะไม่ได้เปิดมันอีกแล้ว",
+    "en": "We never open them again.",
+    "pre": 1.0,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [
+   [
+    "curtain_rings",
+    0.6
+   ],
+   [
+    "city_cut",
+    2.2
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "4F",
+  "scene": 4,
+  "act": 2,
+  "matte": 1.85,
+  "light": "act2",
+  "min": 12,
+  "desc": "3-shot Martin, Dao, Andy; Do soft in background, looking from Dao to Andy.",
+  "lines": [
+   {
+    "char": "martin",
+    "th": "กูจะโทรหาตำรวจ",
+    "en": "I'm calling the police.",
+    "pre": 0.6,
+    "flags": []
+   },
+   {
+    "char": "dao",
+    "th": "แล้วจะบอกเขาว่าอะไร ว่าอนาคตทำเลือดกำเดามึงไหลเหรอ",
+    "en": "And tell them what? That the future gave you a nosebleed?",
+    "pre": 0.3,
+    "flags": []
+   },
+   {
+    "char": "andy",
+    "th": "ดาวพูดถูก อย่าเพิ่งโทร",
+    "en": "Dao's right. Don't call yet.",
+    "pre": 0.5,
+    "flags": []
+   }
+  ],
+  "post": 2.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "5A",
+  "scene": 5,
+  "act": 2,
+  "matte": 1.85,
+  "light": "act2",
+  "min": 8,
+  "desc": "Wide then CU floor: the vase lies on its side on the floor. Dao picks it up, sets it back.",
+  "lines": [
+   {
+    "char": "dao",
+    "th": "ยังไม่มีใครทำมันตก",
+    "en": "Nobody's knocked it over yet.",
+    "pre": 4.0,
+    "flags": []
+   }
+  ],
+  "post": 1.2,
+  "hum": null,
+  "sfx": [
+   [
+    "vase_set",
+    3.4
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "5B",
+  "scene": 5,
+  "act": 2,
+  "matte": 1.85,
+  "light": "act2",
+  "min": 6,
+  "desc": "CU 85mm Andy's palm: a thin cut opens. hum_4. He sits on his hands.",
+  "lines": [
+   {
+    "char": "andy",
+    "th": "งั้นกูไม่จับของมีคมแม่งเลย",
+    "en": "Then I won't touch anything sharp. Nothing.",
+    "pre": 2.4,
+    "flags": []
+   }
+  ],
+  "post": 0.8,
+  "hum": "hum_4",
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "5C",
+  "scene": 5,
+  "act": 2,
+  "matte": 1.85,
+  "light": "act2",
+  "min": 3,
+  "desc": "CU Martin's wrist: three scratch lines rise.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "5D",
+  "scene": 5,
+  "act": 2,
+  "matte": 1.85,
+  "light": "act2",
+  "min": 6,
+  "desc": "Slow pan Andy > Martin > Do, landing on Dao: no marks.",
+  "lines": [
+   {
+    "char": "do",
+    "th": "แล้วทำไมแกไม่มีแผลเลยวะ ดาว",
+    "en": "So why don't you have a mark, Dao?",
+    "pre": 3.0,
+    "flags": []
+   }
+  ],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "6A",
+  "scene": 6,
+  "act": 2,
+  "matte": 1.85,
+  "light": "act2",
+  "min": 8,
+  "desc": "Andy stands at head of table, slightly low like a judge.",
+  "lines": [
+   {
+    "char": "andy",
+    "th": "ถ้าจะมีคนยิง ปืนมันต้องอยู่ในห้องนี้ ค้นทุกคน... เริ่มจากมึง โด้",
+    "en": "If someone's going to shoot, the gun is in this room. We search everyone... starting with you, Do.",
+    "pre": 1.0,
+    "flags": []
+   }
+  ],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "6B",
+  "scene": 6,
+  "act": 2,
+  "matte": 1.85,
+  "light": "act2",
+  "min": 16,
+  "desc": "Andy takes Do's phone; insert chat 'ดาว ❤️'. Martin too calm. CU Dao.",
+  "lines": [
+   {
+    "char": "do",
+    "th": "เอามานี่!",
+    "en": "Give that back!",
+    "pre": 1.5,
+    "flags": []
+   },
+   {
+    "char": "martin",
+    "th": "ไม่ต้องอ่านหรอก กูรู้แล้ว",
+    "en": "Don't bother reading it. I already know.",
+    "pre": 1.5,
+    "flags": []
+   },
+   {
+    "char": "dao",
+    "th": "รู้... ตั้งแต่เมื่อไหร่",
+    "en": "Since... when?",
+    "pre": 2.0,
+    "flags": []
+   },
+   {
+    "char": "martin",
+    "th": "เดือนที่แล้ว",
+    "en": "Last month.",
+    "pre": 0.8,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "6C",
+  "scene": 6,
+  "act": 2,
+  "matte": 1.85,
+  "light": "act2",
+  "min": 18,
+  "desc": "Do searches Martin's jacket: ring box. Opens it. Cruel laugh.",
+  "lines": [
+   {
+    "char": "do",
+    "th": "จะขอแต่งงาน... ในวันเกิดกู ต่อหน้ากูเนี่ยนะ",
+    "en": "You were going to propose... at my birthday, in front of me?",
+    "pre": 3.5,
+    "flags": []
+   },
+   {
+    "char": "martin",
+    "th": "ดาว บอกมันไปเลยว่าเลือกใคร",
+    "en": "Dao, tell him who you choose.",
+    "pre": 1.0,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "เขาเลือกกูไปนานแล้ว",
+    "en": "She chose me a long time ago.",
+    "pre": 1.8,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [
+   [
+    "box_open",
+    2.6
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "6D",
+  "scene": 6,
+  "act": 2,
+  "matte": 1.85,
+  "light": "act2",
+  "min": 18,
+  "desc": "Orbit continues. Andy tries to sit. Do snatches his phone; insert threats + one-way 07:00 flight.",
+  "lines": [
+   {
+    "char": "andy",
+    "th": "กูไว้ทีหลัง",
+    "en": "Do me last.",
+    "pre": 0.8,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "ไม่ มึงก่อน",
+    "en": "No. You next.",
+    "pre": 0.4,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "จะหนีเหรอ",
+    "en": "You were going to run?",
+    "pre": 5.0,
+    "flags": []
+   },
+   {
+    "char": "andy",
+    "th": "มึงบีบกูเอง",
+    "en": "You pushed me.",
+    "pre": 1.0,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "6E",
+  "scene": 6,
+  "act": 2,
+  "matte": 1.85,
+  "light": "act2",
+  "min": 14,
+  "desc": "High angle wide: three close in on Dao. She clutches the purse.",
+  "lines": [
+   {
+    "char": "dao",
+    "th": "ไม่",
+    "en": "No.",
+    "pre": 2.0,
+    "flags": []
+   },
+   {
+    "char": "dao",
+    "th": "แอนดี้ แกเชื่อเราใช่ไหม",
+    "en": "Andy, you believe me, right?",
+    "pre": 1.0,
+    "flags": []
+   },
+   {
+    "char": "andy",
+    "th": "ตอนนี้ไม่มีใครเชื่อใครแล้ว",
+    "en": "Nobody believes anybody any more.",
+    "pre": 0.8,
+    "flags": []
+   }
+  ],
+  "post": 1.8,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "7A",
+  "scene": 7,
+  "act": 3,
+  "matte": 1.85,
+  "light": "act3",
+  "min": 10,
+  "desc": "Andy rips purse away, gun slides out on white cloth. CU 85mm. Dao looks at Do; Do understands.",
+  "lines": [
+   {
+    "char": "dao",
+    "th": "เอาไว้ป้องกันตัว",
+    "en": "It's for protection.",
+    "pre": 2.0,
+    "flags": []
+   },
+   {
+    "char": "andy",
+    "th": "ป้องกันจากใคร",
+    "en": "From who?",
+    "pre": 0.4,
+    "flags": []
+   }
+  ],
+  "post": 3.0,
+  "hum": null,
+  "sfx": [
+   [
+    "purse_rip",
+    0.3
+   ],
+   [
+    "gun_slide",
+    0.9
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "7B",
+  "scene": 7,
+  "act": 3,
+  "matte": 1.85,
+  "light": "act3",
+  "min": 6,
+  "desc": "Handheld Dutch: Martin grabs for gun, Andy grabs his arm; vase falls to its 5A position; gun skitters to floor.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [
+   [
+    "scuffle",
+    0.2
+   ],
+   [
+    "vase_fall",
+    2.2
+   ],
+   [
+    "gun_skitter",
+    3.0
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "7C",
+  "scene": 7,
+  "act": 3,
+  "matte": 1.85,
+  "light": "act3",
+  "min": 8,
+  "desc": "FLOOR-LEVEL GUN 24mm: slow push-in, tilt up to curtain hole and pin of light. Everyone frozen.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [
+   [
+    "clock_tick",
+    0
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "8A",
+  "scene": 8,
+  "act": 3,
+  "matte": 1.85,
+  "light": "act3",
+  "min": 5,
+  "desc": "Andy dives for gun, aims at curtain hole with both hands.",
+  "lines": [
+   {
+    "char": "andy",
+    "th": "ยิงให้มันจบ ๆ ไป",
+    "en": "Let's just get it over with.",
+    "pre": 1.6,
+    "flags": []
+   }
+  ],
+  "post": 0.8,
+  "hum": null,
+  "sfx": [
+   [
+    "body_drop",
+    0.3
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "8B",
+  "scene": 8,
+  "act": 3,
+  "matte": 1.85,
+  "light": "act3",
+  "min": 5,
+  "desc": "Do tackles Andy; they wrestle on the floor.",
+  "lines": [
+   {
+    "char": "do",
+    "th": "ถ้ายิงพลาดล่ะ!",
+    "en": "What if you miss?!",
+    "pre": 0.4,
+    "flags": []
+   }
+  ],
+  "post": 2.6,
+  "hum": null,
+  "sfx": [
+   [
+    "tackle",
+    0.1
+   ],
+   [
+    "scuffle",
+    1.4
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "8C",
+  "scene": 8,
+  "act": 3,
+  "matte": 1.85,
+  "light": "act3",
+  "min": 6,
+  "desc": "BANG. 3 black frames, then curtain twitches, beam flickers through hole. Ringing + muffled breathing 3s.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [
+   [
+    "gunshot",
+    0.0
+   ],
+   [
+    "ringing",
+    0.15
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "8D",
+  "scene": 8,
+  "act": 3,
+  "matte": 1.85,
+  "light": "act3",
+  "min": 14,
+  "desc": "Wide static: they lie/sit breathing. Dao laughs, small broken sound; Martin joins. They move to hallway together. Andy drops gun on rug.",
+  "lines": [
+   {
+    "char": "dao",
+    "th": "จบแล้ว... อันนั้นแหละ",
+    "en": "It's done... that was it.",
+    "pre": 3.5,
+    "flags": []
+   },
+   {
+    "char": "martin",
+    "th": "กูจะเปิดประตู ใครอยู่ข้างนอกก็ช่างแม่ง",
+    "en": "I'm opening the door. I don't care who's out there.",
+    "pre": 1.4,
+    "flags": []
+   }
+  ],
+  "post": 3.0,
+  "hum": null,
+  "sfx": [
+   [
+    "breath",
+    0.0
+   ],
+   [
+    "laugh_broken",
+    2.0
+   ],
+   [
+    "gun_drop_rug",
+    "after:1"
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "9A",
+  "scene": 9,
+  "act": 4,
+  "matte": 1.33,
+  "light": "act34",
+  "min": 8,
+  "desc": "HALLWAY FRAME = 0A. hum_5. Bulb flickers. Body under white tablecloth, wine stain soaked darker. Hand with Do's watch and white cuff.",
+  "lines": [],
+  "post": 1.0,
+  "hum": "hum_5",
+  "sfx": [
+   [
+    "bulb_flicker",
+    1.5
+   ],
+   [
+    "bulb_flicker",
+    5.5
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "9B",
+  "scene": 9,
+  "act": 4,
+  "matte": 1.33,
+  "light": "act34",
+  "min": 8,
+  "desc": "Reverse 50mm: four faces. Living Do steps forward. Doesn't lift the cloth.",
+  "lines": [
+   {
+    "char": "do",
+    "th": "กู... กูยังไม่ตายเลย",
+    "en": "I... I haven't died yet.",
+    "pre": 3.0,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "9C",
+  "scene": 9,
+  "act": 4,
+  "matte": 1.33,
+  "light": "act34",
+  "min": 6,
+  "desc": "CU cloth over chest: dark around one small round hole. Then CU Dao.",
+  "lines": [
+   {
+    "char": "dao",
+    "th": "มันยังไม่หมด",
+    "en": "It's not empty.",
+    "pre": 3.0,
+    "flags": []
+   }
+  ],
+  "post": 1.2,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "9D",
+  "scene": 9,
+  "act": 4,
+  "matte": 1.33,
+  "light": "act34",
+  "min": 16,
+  "desc": "All heads turn to gun on rug. Beat. Do dives for it, scrambles back to the table, gun raised, shaking.",
+  "lines": [
+   {
+    "char": "do",
+    "th": "ถอยไป! ทุกคน",
+    "en": "Stay back! All of you.",
+    "pre": 2.6,
+    "flags": []
+   },
+   {
+    "char": "andy",
+    "th": "โด้ ไม่มีใครอยากจะ—",
+    "en": "Do, nobody wants to—",
+    "pre": 0.6,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "มึงจะขึ้นเครื่องพรุ่งนี้เช้า แอนดี้",
+    "en": "You were getting on a plane tomorrow morning, Andy.",
+    "pre": 0.0,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "มึงพกแหวนมาวันเกิดกู",
+    "en": "You brought a ring to my birthday.",
+    "pre": 0.8,
+    "flags": []
+   },
+   {
+    "char": "do",
+    "th": "แล้วแก... แกก็พกปืนมา",
+    "en": "And you... you brought a gun.",
+    "pre": 0.9,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [
+   [
+    "dive",
+    1.2
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "9E",
+  "scene": 9,
+  "act": 4,
+  "matte": 1.33,
+  "light": "act34",
+  "min": 10,
+  "desc": "Three 85mm CUs: Andy closes fist over cut, Martin pulls sleeve over scratches, Dao looks straight back.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "10A",
+  "scene": 10,
+  "act": 4,
+  "matte": 1.33,
+  "light": "act34",
+  "min": 14,
+  "desc": "Wide down hallway: Martin walks, steps over body, unlocks front door, opens it onto darkness, stands beside it.",
+  "lines": [
+   {
+    "char": "martin",
+    "th": "เปิดแล้ว โด้ ไปสิ",
+    "en": "It's open, Do. Go on.",
+    "pre": 10.0,
+    "flags": []
+   }
+  ],
+  "post": 2.0,
+  "hum": null,
+  "sfx": [
+   [
+    "footsteps",
+    0.5
+   ],
+   [
+    "lock_click",
+    6.5
+   ],
+   [
+    "door_open",
+    7.6
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "10B",
+  "scene": 10,
+  "act": 4,
+  "matte": 1.33,
+  "light": "act34",
+  "min": 8,
+  "desc": "CU Do, very long hold. Looks at door, then hallway, past himself. Doesn't move.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "10C",
+  "scene": 10,
+  "act": 4,
+  "matte": 1.33,
+  "light": "act34",
+  "min": 12,
+  "desc": "Medium: Andy rights a chair, sits, pours the last wine into four glasses.",
+  "lines": [
+   {
+    "char": "andy",
+    "th": "เอาล่ะ...",
+    "en": "Well...",
+    "pre": 6.0,
+    "flags": []
+   },
+   {
+    "char": "andy",
+    "th": "นั่งกันเถอะ",
+    "en": "...let's sit down.",
+    "pre": 1.4,
+    "flags": []
+   }
+  ],
+  "post": 1.5,
+  "hum": null,
+  "sfx": [
+   [
+    "chair_right",
+    0.8
+   ],
+   [
+    "pour",
+    3.2
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "10D",
+  "scene": 10,
+  "act": 4,
+  "matte": 1.33,
+  "light": "act34",
+  "min": 10,
+  "desc": "Dao sits. Martin walks back over the body and sits. Do stays standing with the gun.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [
+   [
+    "footsteps",
+    2.5
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "10E",
+  "scene": 10,
+  "act": 4,
+  "matte": 1.33,
+  "light": "act34",
+  "min": 12,
+  "desc": "OVERHEAD TABLE = 0B. Hum nearly the real song. Lights flicker. New dark-red stain spreads. Do's phone lights: 'RIP ตำนาน 😂'.",
+  "lines": [],
+  "post": 1.0,
+  "hum": "hum_6",
+  "sfx": [
+   [
+    "phone_buzz",
+    8.0
+   ]
+  ],
+  "title": null
+ },
+ {
+  "id": "10F",
+  "scene": 10,
+  "act": 4,
+  "matte": 1.33,
+  "light": "act34",
+  "min": 8,
+  "desc": "Slow crane up and away: four figures round the table, the shape in the hallway at edge of frame. Fade to black.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": null
+ },
+ {
+  "id": "CREDITS",
+  "scene": 11,
+  "act": 4,
+  "matte": 1.33,
+  "light": "black",
+  "min": 0,
+  "desc": "Credits on black. The full song.",
+  "lines": [],
+  "post": 1.0,
+  "hum": null,
+  "sfx": [],
+  "title": "THE STAIN|รอยเปื้อน"
+ }
+]
