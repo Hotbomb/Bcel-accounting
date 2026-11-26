@@ -25,7 +25,7 @@ Then: python3 scripts/make_textures.py; scripts/make_hums.sh; python3 scripts/mi
 scripts/render_queue.sh 6600   # resumable; encodes + commits each finished shot
 
 ## Render queue
-- [ ] 0A (108 unique frames)
+- [x] 0A (rendered 2026-11-26)
 - [ ] 0B (96 unique frames)
 - [ ] 1A (120 unique frames)
 - [ ] 1B (48 unique frames)
