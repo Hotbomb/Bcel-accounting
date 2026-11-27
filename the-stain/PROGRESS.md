@@ -52,7 +52,7 @@ scripts/render_queue.sh 6600   # resumable; encodes + commits each finished shot
 - [x] 4B (rendered 2026-11-27)
 - [x] 4C (rendered 2026-11-27)
 - [x] 4D (rendered 2026-11-27)
-- [ ] 4E (192 unique frames)
+- [x] 4E (rendered 2026-11-27)
 - [ ] 4F (144 unique frames)
 - [ ] 5A (96 unique frames)
 - [ ] 5B (72 unique frames)
