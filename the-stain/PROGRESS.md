@@ -94,3 +94,7 @@ scripts/render_queue.sh 6600   # resumable; encodes + commits each finished shot
    - Watch the whole film for other unclear moments and fix them too.
 3. English dub: expressive English neural voices, tuned per line for emotion (rate/pitch/volume), laid over the picture.
 - Notify the owner every time a scene finishes rendering, with % left (render_queue.sh now exits 4 on "SCENE n COMPLETE").
+
+## Thai film finished (Nov 27)
+- output/the_stain_th_burned.mp4 (Thai subs), output/the_stain_en_burned.mp4 (English subs), output/the_stain_final.mp4 (clean master, CRF 22 to stay under 100 MB). Sent to owner.
+- Next: shot fixes (1K, 3C, 2B + full watch-through), then English dub.
