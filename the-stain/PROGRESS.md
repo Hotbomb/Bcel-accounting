@@ -81,3 +81,6 @@ scripts/render_queue.sh 6600   # resumable; encodes + commits each finished shot
 - [ ] 10D (120 unique frames)
 - [ ] 10E (144 unique frames)
 - [ ] 10F (96 unique frames)
+
+## Owner decision (Nov 27)
+- Keep Thai voices for the film. After the Thai film is finished, make an English dub version (new English TTS voices laid over the existing picture, no re-render).
