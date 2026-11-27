@@ -84,3 +84,13 @@ scripts/render_queue.sh 6600   # resumable; encodes + commits each finished shot
 
 ## Owner decision (Nov 27)
 - Keep Thai voices for the film. After the Thai film is finished, make an English dub version (new English TTS voices laid over the existing picture, no re-render).
+
+## Owner requests for after the Thai render (Nov 27), in this order
+1. Send the owner the full Thai mp4 first (finish.py), as a file in chat.
+2. Fix confusing actions, then re-render only those shots:
+   - 1K: show Andy's glass tipping, falling and the wine landing on the old stain (clear slow-mo insert).
+   - 3C: show Do's elbow actually hitting Martin's nose (contact frame, then cut).
+   - 2B: make the "invisible punch" read clearly (sharper head snap, blood appears on cue).
+   - Watch the whole film for other unclear moments and fix them too.
+3. English dub: expressive English neural voices, tuned per line for emotion (rate/pitch/volume), laid over the picture.
+- Notify the owner every time a scene finishes rendering, with % left (render_queue.sh now exits 4 on "SCENE n COMPLETE").
