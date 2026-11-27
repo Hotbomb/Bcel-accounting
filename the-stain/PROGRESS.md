@@ -98,3 +98,7 @@ scripts/render_queue.sh 6600   # resumable; encodes + commits each finished shot
 ## Thai film finished (Nov 27)
 - output/the_stain_th_burned.mp4 (Thai subs), output/the_stain_en_burned.mp4 (English subs), output/the_stain_final.mp4 (clean master, CRF 22 to stay under 100 MB). Sent to owner.
 - Next: shot fixes (1K, 3C, 2B + full watch-through), then English dub.
+
+## Final delivery (2026-11-27)
+- All clarity fixes re-rendered: 1K (glass spill), 2B & 3C (elbow to nose), 7A (gun shown), 7B (gun lands on rug), 8A, 8B, 4C, 5A, 9C.
+- English dub done: output/the_stain_english_dub.mp4. Thai with subs: output/the_stain_th_burned.mp4. Also the_stain_final.mp4 (no subs) and the_stain_en_burned.mp4 (Thai voices, English subs).
