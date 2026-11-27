@@ -608,7 +608,8 @@ def s_4C():
         S.at(0.6, lambda fr: (sh.keyframe_insert("default_value", frame=fr - 2), setattr(sh, "default_value", 0), sh.keyframe_insert("default_value", frame=fr)))
     setup(S, 0, 3.9, (-1.8, 2.3, 1.6), (1.0, -0.8, 1.2), 28)
     pu = purse(DAO_LAP); S.key("dao", 0, "sit_lap"); S.key("dao", 4.3, {**C.POSES["sit_lap"], "forearm.L": D(-0.5, -0.8, -0.1), "forearm.R": D(0.5, -0.8, -0.1)}, ease=0.3)
-    setup(S, 3.9, S.dur, DAO_LAP + Vector((-0.85, 0.05, 0.3)), DAO_LAP + Vector((0, 0, 0.08)), 85); S.focus_on(3.9, DAO_LAP + Vector((0, 0, 0.08)))
+    # FIX: high side angle on Dao's lap so the purse and her tightening hands read (was blocked by the tablecloth)
+    setup(S, 3.9, S.dur, DAO_LAP + Vector((-0.6, -0.5, 0.55)), DAO_LAP + Vector((0, 0, 0.06)), 50, DAO_LAP + Vector((-0.5, -0.42, 0.48))); S.focus_on(3.9, DAO_LAP + Vector((0, 0, 0.06)))
     for n in ("martin", "dao", "andy"): S.look(n, "do", 1.0, 3.9); S.set_expr(n, 1, -0.3, 0.6)
     S.set_expr("do", 0.5, 0.6, 0.6)
     return S
@@ -683,7 +684,9 @@ def s_5A():
     for n in ("martin", "andy", "do"): S.look(n, "dao", 0, S.dur); S.set_expr(n, 0, -0.2, 0.4)
     vis("martin_noseblood", t_on=0, S=S)
     setup(S, 0, 1.2, WIDE[0], (-0.6, 0.1, 0.8), 28)
-    setup(S, 1.2, 2.5, vf + Vector((0.6, -0.45, 0.25)), vf, 50, vf + Vector((0.5, -0.38, 0.22))); S.focus_on(1.2, vf)
+    # FIX: vase insert from the side away from Dao, so her body doesn't cover it
+    away = (vf - Vector((-0.95, -0.4, vf.z))); away.z = 0; away.normalize()
+    setup(S, 1.2, 2.5, vf + away * 0.65 + Vector((0, 0, 0.35)), vf, 40, vf + away * 0.55 + Vector((0, 0, 0.3))); S.focus_on(1.2, vf)
     setup(S, 2.5, S.dur, (-1.7, 1.7, 1.45), "dao", 50); S.focus_on(2.5, "dao")
     return S
 
@@ -847,13 +850,21 @@ def s_7A():
     g = stain.make_gun("gun", (-0.45, -0.05, stain.TABLE_TOP + 0.02), (0, 0, 0.6))
     gt = Vector((-0.2, 0.25, stain.TABLE_TOP + 0.02))
     path_key(S, g, [(0, Vector((0, 0, -3)), None), (0.6, Vector((-0.42, -0.08, 0.85)), (math.pi / 2, 0, 0.2)), (0.85, Vector((-0.4, 0.0, stain.TABLE_TOP + 0.02)), (math.pi / 2, 0, 0.4)), (1.3, gt, (math.pi / 2, 0, 0.9))])
-    setup(S, 0, 1.5, (-1.2, -1.6, 1.5), (-0.4, -0.2, 0.8), 35)
-    setup(S, 1.5, 2.0, gt + Vector((0.35, -0.3, 0.2)), gt, 85); S.focus_on(1.5, gt)
-    cu(S, 2.0, 4.6, "dao", 20, 1.7, 85); S.focus_on(2.0, "dao")
+    # FIX: clear view of the rip (no one's back in the way), then a long, bright close-up of the gun on the white cloth
+    setup(S, 0, 1.0, (0.65, 0.45, 1.55), (-0.4, -0.6, 0.9), 30, (0.6, 0.4, 1.5), (-0.4, -0.45, 0.85)); S.focus_on(0, (-0.45, -0.55, 0.9))
+    dark = stain.clay("gun_matte", (0.012, 0.012, 0.014), 0.45, 0.02, 0.1)   # matte black so it pops on the white cloth
+    for c in g.children: c.data.materials.clear(); c.data.materials.append(dark)
+    vs = bpy.context.scene.view_settings; e0 = S.exposure
+    def expo(fr):   # the white cloth under the pendant blows out in close-up: drop exposure only for the gun insert
+        for f, v in ((1, e0), (S.f(1.0) - 1, e0), (S.f(1.0), -2.2), (S.f(2.6) - 1, -2.2), (S.f(2.6), e0)):
+            vs.exposure = v; vs.keyframe_insert("exposure", frame=f)
+    S.at(0, expo)
+    setup(S, 1.0, 2.6, gt + Vector((0.45, -0.42, 0.3)), gt, 50, gt + Vector((0.3, -0.28, 0.18)), gt); S.focus_on(1.0, gt)
+    cu(S, 2.6, 4.6, "dao", 20, 1.7, 85); S.focus_on(2.6, "dao")
     cu(S, 4.6, 6.6, "dao", 20, 1.7, 85); S.look("dao", "do", 4.6, 7.0)
     cu(S, 6.6, S.dur, "do", 0, 1.8, 85, push=0.15); S.focus_on(6.6, "do"); S.set_expr("do", 7.0, -0.7, 0.8, 0.5); S.look("do", "dao", 6.6, S.dur)
     S.set_expr("dao", 0.4, -0.6, 0.5)
-    for n in S.p: S.look(n, gt, 1.0, 2.0) if n != "dao" else None
+    for n in S.p: S.look(n, gt, 1.0, 2.6) if n != "dao" else None
     return S
 
 @shot("7B")
@@ -872,7 +883,12 @@ def s_7B():
     S.walk_to("andy", 0.2, 0.8, (-0.35, -0.6)); S.key("andy", 1.0, aim_pose(S, "andy", S.head_pos("martin", 1) + Vector((0.2, 0, -0.4)), 1.0, base="stand", both=True), ease=0.4)
     S.key("martin", 2.0, {**C.POSES["stand_reach"], "spine": E(20, 0, 25)}, ease=0.5); S.key("andy", 2.0, "stand_arms_out", ease=0.4); S.key("martin", 3.2, "stand_arms_out")
     push_chair(S, "dao", 0.6); S.key("dao", 0.6, "stand", ease=0.6)
-    setup(S, 0, S.dur, (-2.2, -1.3, 1.55), (-0.5, -0.05, 1.0), 28, (-2.1, -1.15, 1.5))
+    # FIX: shoot from the lit table side so faces, the vase and the gun read (was all silhouettes)
+    S.exposure += 0.5
+    setup(S, 0, 2.9, (0.75, 0.95, 1.75), (-0.6, -0.1, 1.0), 28, (0.65, 0.85, 1.7), (-0.6, -0.05, 0.95))
+    S.camera(2.9, (0.2, 1.3, 1.3), (-0.6, 0.35, 0.6), 28, ease=0.0001); S.camera(3.75, (-0.3, 1.2, 0.8), stain.GUN_RUG, 45, ease=0.7)
+    S.camera(S.dur, (-0.35, 1.15, 0.75), stain.GUN_RUG, 45, ease=1.0)
+    S.focus_on(0, (-0.55, -0.2, 1.1)); S.focus_on(2.9, gt); S.focus_on(3.6, stain.GUN_RUG)
     for n in S.p: S.look(n, g.location, 2.9, S.dur)
     return S
 
@@ -898,7 +914,9 @@ def s_8A():
     S.key("andy", 1.2, "kneel", ease=0.5)
     S.key("andy", 1.6, {**C.POSES["kneel"], **{k: v for k, v in aim_pose(S, "andy", stain.HOLE_SPOT, 1.6, base="kneel", both=True).items() if "arm" in k or "hand" in k}}, ease=0.4)
     S.look("andy", stain.HOLE_SPOT, 1.4, S.dur)
-    setup(S, 0, S.dur, (-0.1, 1.9, 1.3), (-1.6, 0.8, 0.6), 35, (-0.2, 1.95, 1.25))
+    # FIX: low camera beside Andy: we see the dive, the gun in his hands and where he aims
+    S.exposure += 0.5
+    setup(S, 0, S.dur, (-0.45, 1.75, 1.1), (-1.4, 0.45, 0.85), 28, (-0.55, 1.8, 1.0), (-1.55, 0.6, 0.85)); S.focus_on(0, "andy")
     for n in ("martin", "dao", "do"): S.look(n, "andy", 0.3, S.dur); S.set_expr(n, 0.5, -0.4, 0.7)
     return S
 
@@ -913,7 +931,9 @@ def s_8B():
     S.key("do", 0, "stand", loc=(-0.6, -1.35, 0)); S.key("do", 0.5, "lunge", loc=(-1.3, 0.2, 0), face="andy", ease=0.8)
     S.key("do", 0.9, "lying", loc=(-1.45, 0.85, 0), face=(-0.6, 1), ease=0.4); S.key("andy", 0.95, "floor_gun", ease=0.4)
     S.key("andy", 2.0, "floor_sit", ease=0.6); S.key("andy", 3.0, "floor_gun", ease=0.5); S.key("do", 2.5, "floor_sit", ease=0.6); S.key("do", 3.6, "lunge", ease=0.5)
-    setup(S, 0, S.dur, (-0.3, 2.1, 1.5), (-1.45, 0.7, 0.4), 28, (-0.35, 2.0, 1.45))
+    # FIX: same low side camera as 8A, so the tackle and the floor wrestle are in frame
+    S.exposure += 0.5
+    setup(S, 0, S.dur, (-0.35, 1.9, 1.15), (-1.35, 0.45, 0.55), 24, (-0.4, 1.95, 1.05), (-1.45, 0.75, 0.4)); S.focus_on(0, (-1.45, 0.7, 0.5))
     S.set_expr("do", 0, 0.8, 0.6); S.set_expr("andy", 0.8, 0.8, 0.4)
     return S
 
@@ -984,9 +1004,10 @@ def s_9B():
 
 @shot("9C")
 def s_9C():
-    S = Shot("9C"); S.fstop = 2.0; act4_base(S); S.key("do", 0, "stand", loc=(1.2, -3.3, 0))
+    S = Shot("9C"); S.fstop = 4.0; act4_base(S); S.key("do", 0, "stand", loc=(1.2, -3.3, 0)); S.exposure += 0.6
     cp = chest_point()
-    setup(S, 0, 2.6, cp + Vector((0.3, 0.45, 0.45)), cp, 85, cp + Vector((0.27, 0.4, 0.4))); S.focus_on(0, cp)
+    # FIX: sharper, brighter, closer look at the cloth over the chest so the small round hole reads
+    setup(S, 0, 2.6, cp + Vector((0.12, 0.3, 0.5)), cp, 50, cp + Vector((0.1, 0.25, 0.42))); S.focus_on(0, cp)
     cu(S, 2.6, S.dur, "dao", 0, 1.7, 85); S.focus_on(2.6, "dao"); S.set_expr("dao", 2.6, -0.7, 0.3)
     S.look("dao", cp, 2.6, 3.0); S.look("dao", stain.GUN_RUG, 3.0, S.dur)
     stain.make_gun("gun", stain.GUN_RUG, (0, 0, 2.3))
