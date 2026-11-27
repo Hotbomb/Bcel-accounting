@@ -1,5 +1,6 @@
 # Full soundtrack from timeline.json -> audio/mix/full_mix.wav (+ stems). Also usable as the radio-play cut.
-import json, os, numpy as np, soundfile as sf, subprocess
+import json, os, sys, numpy as np, soundfile as sf, subprocess
+EN = "--en" in sys.argv  # English dub: same mix, English voices from audio/vo_en/
 from scipy.signal import butter, sosfilt, fftconvolve
 SR = 48000
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
@@ -33,7 +34,8 @@ def T(sid, t=0.0): return by_id[sid]["start"] + t
 # ---------- dialogue ----------
 for s in tl:
     for l in s["lines"]:
-        x = rms_norm(load(os.path.join(ROOT, l["file"])), -20)
+        f = l["file"].replace("audio/vo/", "audio/vo_en/") if EN else l["file"]
+        x = rms_norm(load(os.path.join(ROOT, f)), -20)
         if "os" in l["flags"]:
             x = filt(x, "low", 3500) * 0.6
         wet = fftconvolve(x, room_ir)[: len(x) + SR // 2]
@@ -131,7 +133,7 @@ mix = np.tanh(mix * 1.0)  # soft limiter: keeps the gunshot from flattening ever
 os.makedirs(os.path.join(ROOT, "audio", "mix"), exist_ok=True)
 raw = os.path.join(ROOT, "audio", "mix", "full_mix_raw.wav")
 sf.write(raw, mix.astype(np.float32), SR)
-out = os.path.join(ROOT, "audio", "mix", "full_mix.wav")
+out = os.path.join(ROOT, "audio", "mix", "full_mix_en.wav" if EN else "full_mix.wav")
 subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", raw, "-af", "loudnorm=I=-14:TP=-1.0:LRA=14", "-ar", str(SR), "-ac", "2", out])
 os.remove(raw)
 print("mix", round(total, 1), "s ->", out)

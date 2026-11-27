@@ -101,11 +101,19 @@ def main():
     mix = "audio/mix/full_mix.wav"
     final = "output/the_stain_final.mp4"
     run(["ffmpeg", "-y", "-loglevel", "error", "-i", f"{TMP}/picture.mp4", "-i", mix, "-map", "0:v", "-map", "1:a",
-         "-c:v", "libx264", "-preset", "slow", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", final])
+         "-c:v", "libx264", "-preset", "slow", "-crf", "22", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", final])
     style = "FontName=Noto Sans Thai,FontSize=22,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=1,Outline=1.4,Shadow=0,MarginV=24"
     run(["ffmpeg", "-y", "-loglevel", "error", "-i", final, "-vf", f"subtitles=output/the_stain_th.srt:force_style='{style}'",
          "-c:v", "libx264", "-preset", "slow", "-crf", "21", "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", "output/the_stain_th_burned.mp4"])
-    for f in (final, "output/the_stain_th_burned.mp4"):
+    outs = [final, "output/the_stain_th_burned.mp4"]
+    run(["ffmpeg", "-y", "-loglevel", "error", "-i", final, "-vf", f"subtitles=output/the_stain_en.srt:force_style='{style}'",
+         "-c:v", "libx264", "-preset", "slow", "-crf", "22", "-pix_fmt", "yuv420p", "-c:a", "copy", "-movflags", "+faststart", "output/the_stain_en_burned.mp4"])
+    outs.append("output/the_stain_en_burned.mp4")
+    if os.path.exists("audio/mix/full_mix_en.wav"):  # English dub: same picture, English voices
+        run(["ffmpeg", "-y", "-loglevel", "error", "-i", final, "-i", "audio/mix/full_mix_en.wav", "-map", "0:v", "-map", "1:a",
+             "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", "output/the_stain_english_dub.mp4"])
+        outs.append("output/the_stain_english_dub.mp4")
+    for f in outs:
         print(f, round(os.path.getsize(f) / 1e6, 1), "MB")
 
 if __name__ == "__main__":
