@@ -103,6 +103,19 @@ def path_key(S, o, keys):
             o.keyframe_insert("location", frame=f)
             if r is not None: o.keyframe_insert("rotation_euler", frame=f)
     S.at(0, ev)
+def nose_spurt(S, t, n="martin", back=0.0):
+    """Short blood spray from the nose at the moment of the hit, so the injury reads instantly."""
+    m = stain.clay("blood_spray", (0.05, 0.0, 0.004), 0.3, 0)
+    h = S.head_pos(n, t); ang = S.face[n].at(t, lambda a, b, u: anim.lerp(a, b, u)) or 0.0
+    fwd = fdir(ang); side = Vector((-fwd.y, fwd.x, 0)); nose = h + fwd * 0.16 + Vector((0, 0, -0.06))
+    for i in range(9):
+        d = stain.sphere(f"spurt{i}", 0.011 + 0.003 * (i % 3), (0, 0, -5), m)
+        v = fwd * (0.12 + 0.03 * (i % 4)) + side * (0.05 * ((i % 5) - 2)) + Vector((0, 0, 0.05 - 0.02 * (i % 3))) - fwd * back
+        keys = [(0, Vector((0, 0, -5)), None), (t - 0.02, Vector((0, 0, -5)), None)]
+        for k in range(1, 7):
+            u = k * 0.06; keys.append((t + u, nose + v * (u / 0.18) + Vector((0, 0, -1.6 * u * u)), None))
+        keys.append((t + 0.4, Vector((0, 0, -5)), None)); path_key(S, d, keys)
+
 def laugh(S, names, t0, t1, amt=0.7):
     for n in names:
         if n in S.p: S.mouth(n, t0, t1, amt); S.set_expr(n, t0, 0, 0.5); S.set_expr(n, t1 + 0.3, 0, 0.0)
@@ -381,27 +394,53 @@ def s_1J():
 @shot("1K")
 def s_1K():
     S = Shot("1K"); S.fstop = 2.8
-    setup(S, 0, 1.55, (1.7, 1.55, 1.38), (1.0, -0.1, 1.05), 50)
+    # FIX: the knock, the fall and the spill are all on screen now (owner note: "we don't see a glass falling")
     laugh(S, ("andy", "do"), 0.3, 1.8, 0.9)
-    S.key("andy", 0, "sit"); S.key("andy", 0.9, {**C.POSES["sit"], "spine": E(-15, 0, 0)}, ease=0.5)
-    S.key("andy", 1.5, {**C.POSES["sit"], "spine": E(20, 0, 0), "upper_arm.R": D(-0.6, -0.7, -0.3), "forearm.R": D(-0.6, -0.8, -0.1)}, ease=0.3); S.key("andy", 2.6, "sit")
+    sit_lean = lambda sp, **k: {**C.POSES["sit"], "spine": E(sp, 0, 0), **k}
+    S.key("andy", 0, "sit"); S.key("andy", 0.9, sit_lean(-15), ease=0.5)
+    S.key("andy", 1.3, sit_lean(-10, **{"upper_arm.R": D(-0.9, -0.3, 0.35), "forearm.R": D(-0.8, -0.5, 0.5)}), ease=0.4)   # big laughing fling
+    S.key("andy", 1.6, sit_lean(28, **{"upper_arm.R": D(0.15, -1, -0.35), "forearm.R": D(0.45, -1, -0.3)}), ease=0.25)    # swipe hits the glass
+    S.key("andy", 2.2, sit_lean(20, **{"upper_arm.R": D(0.15, -1, -0.35), "forearm.R": D(0.45, -1, -0.3)}))
+    S.key("andy", 2.6, "sit", ease=0.6)
+    S.set_expr("andy", 1.65, -0.5, 0.7, 0.1)
     g = OBJ("glass_andy"); g0 = g.location.copy(); st = OBJ("wine_stain").location
-    path_key(S, g, [(1.55, g0, (0, 0, 0)), (1.75, g0 + Vector((-0.04, 0.02, 0.02)), (0.9, 0, 0.6)), (1.9, g0 + Vector((-0.06, 0.03, 0.04)), (1.57, 0, 0.6))])
-    # slow-motion insert: the wine arc lands exactly in the existing stain
-    wine = stain.clay("wine", (0.3, 0.02, 0.05), 0.1, 0)
-    drops = [stain.sphere(f"wdrop{i}", 0.018 - i * 0.001, (0, 0, -5), wine) for i in range(10)]
-    a = g0 + Vector((-0.08, 0.02, 0.12)); b = st + Vector((0, 0, 0.01))
-    for i, d in enumerate(drops):
-        keys = []
-        for k in range(9):
-            u = k / 8; tt = 1.9 + i * 0.05 + u * 0.75
-            p = a.lerp(b, u) + Vector((0, 0, 0.22 * math.sin(math.pi * u)))
-            keys.append((tt, p, None))
-        keys.append((1.85, Vector((0, 0, -5)), None)); keys.append((2.75 + i * 0.05, Vector((0, 0, -5)), None))
-        path_key(S, d, sorted(keys, key=lambda x: x[0]))
-    setup(S, 1.55, 3.0, b + Vector((0.55, -0.35, 0.3)), b + Vector((0.2, -0.1, 0.05)), 50, b + Vector((0.45, -0.3, 0.25)), b)
-    S.focus_on(1.55, b)
-    setup(S, 3.0, S.dur, (-2.4, 0.4, 1.5), (0.3, 0.4, 1.0), 35, (-2.3, 0.4, 1.48))
+    wine = stain.clay("wine_spill", (0.16, 0.004, 0.015), 0.2, 0)
+    inglass = stain.cyl("glass_andy_wine", 0.036, 0.03, (0, 0, 0.115), wine); inglass.parent = g; inglass.location = (0, 0, 0.115)
+    vis(inglass, t_off=1.8, S=S)
+    lie = g0.copy(); lie.z = stain.TABLE_TOP + 0.04
+    path_key(S, g, [(0, g0, (0, 0, 0)), (1.6, g0, (0, 0, 0)), (1.7, g0 + Vector((-0.02, 0, 0.005)), (0, -0.55, 0.1)),
+                    (1.82, lie + Vector((0, 0, 0.012)), (0, -1.6, 0.25)), (1.9, lie + Vector((0, 0, 0.02)), (0, -1.45, 0.3)), (2.0, lie, (0, -1.5708, 0.35))])
+    # the wine: a slow-motion ribbon from the glass mouth to the old stain, then a splash and a fresh puddle on top of it
+    mouth = lie + Vector((-0.2, 0.0, 0.0)); b = st + Vector((0, 0, 0.012))
+    # continuous ribbon: head and tail of the stream travel along the arc; drops are spread evenly between them, keyed every frame
+    N = 70; drops = [stain.sphere(f"wdrop{i}", 0.013, (0, 0, -5), wine, scale=(1.6, 1, 1), seg=12) for i in range(N)]
+    arc = lambda u: mouth.lerp(b, u) + Vector((0, 0, 0.14 * math.sin(math.pi * u)))
+    cl = lambda x: max(0.0, min(1.0, x))
+    def ribbon(fr, drops=drops):
+        for d in drops: d.location = (0, 0, -5); d.keyframe_insert("location", frame=1)
+        for f in range(S.f(2.05), S.f(3.3) + 1):
+            t = f / 24.0; hd = cl((t - 2.1) / 0.6); tl = cl((t - 2.55) / 0.6)
+            for i, d in enumerate(drops):
+                if hd <= 0 or tl >= 1: d.location = (0, 0, -5)
+                else:
+                    u = tl + (hd - tl) * i / (N - 1); d.location = arc(u) + Vector((0, 0.004 * math.sin(i * 2.3), 0.003 * math.cos(i * 1.7)))
+                d.keyframe_insert("location", frame=f)
+    S.at(0, ribbon)
+    splash = [stain.sphere(f"wsplash{i}", 0.009, (0, 0, -5), wine) for i in range(10)]
+    for i, d in enumerate(splash):
+        a = i * 0.628 + 0.2; out = Vector((math.cos(a), math.sin(a), 0)) * (0.08 + 0.03 * (i % 3))
+        path_key(S, d, [(0, Vector((0, 0, -5)), None), (2.68, Vector((0, 0, -5)), None), (2.7, b, None),
+                        (2.85, b + out * 0.6 + Vector((0, 0, 0.07 + 0.02 * (i % 2))), None), (3.0, b + out, None), (3.02, Vector((0, 0, -5)), None)])
+    pud = stain.decal("wine_puddle", "stain_dark.png", 0.36, 0.36, b + Vector((0, 0, 0.001)), rot=(0, 0, 0.4), rough=0.15)
+    path_key(S, pud, [(0, Vector((0, 0, -5)), None), (2.68, Vector((0, 0, -5)), None), (2.7, b, None)])
+    S.at(0, lambda fr: key_obj(pud, 1, scale=(0.2, 0.2, 1)))
+    S.at(2.7, lambda fr: (key_obj(pud, fr, scale=(0.2, 0.2, 1)), key_obj(pud, S.f(3.1), scale=(1.25, 1.15, 1))))
+    # cameras: medium on Andy + glass (knock and fall) -> slow-mo side view of the arc -> top-down on the stain -> wide
+    setup(S, 0, 2.05, (0.35, 1.15, 1.15), (1.25, 0.35, 1.02), 32, (0.4, 1.1, 1.13), (1.2, 0.35, 0.98)); S.focus_on(0, g0)
+    side = (0.5, 1.6, 1.08); setup(S, 2.05, 3.05, side, (0.5, 0.48, 0.84), 32, (0.45, 1.5, 1.04), (0.45, 0.5, 0.82))
+    S.focus_on(2.05, (0.5, 0.5, 0.82))
+    setup(S, 3.05, 3.7, b + Vector((0.06, -0.45, 0.6)), b, 35, b + Vector((0.05, -0.38, 0.5)), b); S.focus_on(3.05, b)
+    setup(S, 3.7, S.dur, (-2.4, 0.4, 1.5), (0.3, 0.4, 1.0), 35, (-2.3, 0.4, 1.48))
     laugh(S, ("martin", "andy", "do"), 3.2, 4.8, 0.7); S.look("dao", b, 3.0, S.dur); S.set_expr("dao", 3.5, 0.2, 0.0)
     return S
 
@@ -418,10 +457,13 @@ def s_2A():
 @shot("2B")
 def s_2B():
     S = Shot("2B"); S.handheld = 1.0; S.fstop = 2.0
-    cu(S, 0, S.dur, "martin", 8, 1.7, 85, dz=0.0)
-    S.key("martin", 0, "sit"); S.key("martin", 0.35, "recoil", ease=0.15); S.key("martin", 1.4, "sit_napkin", ease=0.4)
-    S.set_expr("martin", 0, 0, 0); S.set_expr("martin", 0.4, -0.6, 0.8, 0.1); S.set_expr("martin", 1.3, 0.8, 0.0)
-    vis("martin_noseblood", t_on=0.42, S=S)
+    # FIX: the invisible punch reads as a hit now: wider framing keeps the head in shot, a hard snap on the thud, a blood spray
+    cu(S, 0, S.dur, "martin", 8, 2.3, 65, dz=0.05, tdz=0.03)
+    S.key("martin", 0, "sit"); S.key("martin", 0.3, "sit")
+    S.key("martin", 0.38, {**C.POSES["recoil"], "head": E(-45, 0, 8)}, ease=0.1)
+    S.key("martin", 0.7, "recoil", ease=0.5); S.key("martin", 1.4, "sit_napkin", ease=0.4)
+    S.set_expr("martin", 0, 0, 0); S.set_expr("martin", 0.38, -0.6, 0.9, 0.1); S.set_expr("martin", 1.3, 0.8, 0.0)
+    vis("martin_noseblood", t_on=0.38, S=S); nose_spurt(S, 0.36)
     return S
 
 @shot("2C")
@@ -469,18 +511,36 @@ def s_3B():
 
 @shot("3C")
 def s_3C():
-    S = Shot("3C"); S.handheld = 1.2; S.fstop = 2.8
+    # FIX (owner note: "we don't see the elbow connecting to Martin's nose"): both men lean in over the table corner,
+    # Do half-rises and throws his elbow up; we see the contact frame at 1.3 s, then cut to Martin reeling back.
+    S = Shot("3C"); S.handheld = 0.9; S.fstop = 4.0
     push_chair(S, "martin", 0.2)
-    S.key("martin", 0, "sit"); S.key("martin", 0.35, "stand", ease=0.8)
-    S.key("martin", 0.4, loc=tuple(SEAT["martin"])); S.key("martin", 1.1, "lunge", loc=(0.0, 1.0, 0), face=(0.4, -1), ease=0.8)
-    S.key("do", 0.6, "sit"); S.key("do", 1.15, {**C.POSES["sit"], "spine": E(-15, 0, 0), "upper_arm.R": D(-0.6, 0.4, 0.6), "forearm.R": D(0.5, -0.5, 0.8)}, ease=0.4)
-    S.key("martin", 1.3, "recoil", loc=(-0.35, 1.45, 0), ease=0.5)
-    setup(S, 0, 1.3, (2.6, 1.15, 1.9), (0.0, 0.25, 1.05), 35)
-    S.camera(1.3, (0.65, 0.05, 1.5), "martin", 50, ease=0.0001); S.camera(S.dur, (0.6, 0.1, 1.48), "martin", 50, ease=1.0)
-    S.focus_on(1.3, "martin")
-    vis("martin_noseblood", t_on=1.35, S=S); S.set_expr("martin", 1.3, -0.7, 0.8, 0.1)
+    S.key("martin", 0, "sit"); S.key("martin", 0.45, "stand", ease=0.8)
+    S.key("martin", 0.5, loc=tuple(SEAT["martin"]))
+    S.key("martin", 1.25, {**C.POSES["lunge"], "spine": E(MS, 0, 0), "head": E(MH, 0, 0)}, loc=ML, face=MF, ease=0.7)
+    S.key("martin", 1.36, {**C.POSES["lunge"], "spine": E(MS, 0, 0), "head": E(MH, 0, 0)})
+    S.key("martin", 1.4, {**C.POSES["lunge"], "spine": E(MS - 25, 0, 0), "head": E(-45, 0, 0)}, ease=0.2)
+    S.key("martin", 1.6, {**C.POSES["recoil"], "head": E(-40, 0, 0)}, loc=(-0.25, 1.4, 0), ease=0.35)
+    S.key("martin", 2.4, "recoil", loc=(-0.35, 1.45, 0), ease=0.6)
+    S.key("do", 0, "sit"); S.key("do", 0.7, "sit")
+    elbow = {**C.POSES["stand"], "spine": E(DS, 0, DY), "upper_arm.L": D(*DU), "forearm.L": D(*DFA), "hand.L": D(*DFA)}
+    S.key("do", 1.05, {**C.POSES["stand"], "spine": E(15, 0, 0)}, loc=DL0, face=DF, ease=0.6)
+    S.key("do", 1.3, elbow, loc=DL, face=DF, ease=0.25)
+    S.key("do", 1.7, {**C.POSES["stand"], "spine": E(5, 0, 0), "upper_arm.L": D(0.4, -0.4, -1)}, ease=0.6)
+    S.look("martin", "do", 0, 1.3); S.look("do", "martin", 0.6, 1.1)
+    # camera: side-on to the table corner so both bodies and the contact point read in one frame, then cut to Martin
+    setup(S, 0, 1.55, CAM0, CT0, 30, CAM1, CT1)
+    S.focus_on(0, CT1)
+    S.camera(1.55, (-0.9, 0.55, 1.45), "martin", 40, ease=0.0001); S.camera(S.dur, (-0.95, 0.5, 1.45), "martin", 40, ease=1.0)
+    S.focus_on(1.55, "martin")
+    vis("martin_noseblood", t_on=1.37, S=S); nose_spurt(S, 1.37, back=0.25); S.set_expr("martin", 1.33, -0.7, 0.8, 0.1); S.set_expr("do", 1.0, -0.6, 0.6)
     for n in ("dao", "andy"): S.set_expr(n, 1.0, -0.3, 0.8)
     return S
+
+MS, MH, ML, MF = 76, 15, (0.03, 0.93, 0), (0.35, -1)
+DS, DY, DL0, DL, DF = 38, 25, (0.66, -0.3, 0), (0.68, -0.06, 0), (-0.35, 1)
+DU, DFA = (0.3, -1, 0.55), (-0.7, 0.8, 0.2)
+CAM0, CT0, CAM1, CT1 = (-1.6, -0.75, 1.9), (0.2, 0.45, 1.2), (-1.5, -0.68, 1.86), (0.35, 0.3, 1.25)
 
 @shot("3D")
 def s_3D():
