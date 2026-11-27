@@ -80,7 +80,7 @@ scripts/render_queue.sh 6600   # resumable; encodes + commits each finished shot
 - [x] 10C (rendered 2026-11-27)
 - [x] 10D (rendered 2026-11-27)
 - [x] 10E (rendered 2026-11-27)
-- [ ] 10F (96 unique frames)
+- [x] 10F (rendered 2026-11-27)
 
 ## Owner decision (Nov 27)
 - Keep Thai voices for the film. After the Thai film is finished, make an English dub version (new English TTS voices laid over the existing picture, no re-render).
