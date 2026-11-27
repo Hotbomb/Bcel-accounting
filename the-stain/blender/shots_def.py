@@ -886,8 +886,9 @@ def s_7B():
     # FIX: shoot from the lit table side so faces, the vase and the gun read (was all silhouettes)
     S.exposure += 0.5
     setup(S, 0, 2.9, (0.75, 0.95, 1.75), (-0.6, -0.1, 1.0), 28, (0.65, 0.85, 1.7), (-0.6, -0.05, 0.95))
-    S.camera(2.9, (0.2, 1.3, 1.3), (-0.6, 0.35, 0.6), 28, ease=0.0001); S.camera(3.75, (-0.3, 1.2, 0.8), stain.GUN_RUG, 45, ease=0.7)
-    S.camera(S.dur, (-0.35, 1.15, 0.75), stain.GUN_RUG, 45, ease=1.0)
+    # FIX 2: follow the gun off the table edge from high up, clear of the table, so it lands in plain view on the rug
+    S.camera(2.9, (-0.7, 1.9, 1.7), (-1.0, 0.45, 0.7), 30, ease=0.0001); S.camera(3.75, (-1.05, 1.85, 1.45), stain.GUN_RUG, 35, ease=0.7)
+    S.camera(S.dur, (-1.15, 1.75, 1.3), stain.GUN_RUG, 40, ease=1.0)
     S.focus_on(0, (-0.55, -0.2, 1.1)); S.focus_on(2.9, gt); S.focus_on(3.6, stain.GUN_RUG)
     for n in S.p: S.look(n, g.location, 2.9, S.dur)
     return S
